@@ -875,6 +875,7 @@ namespace CCompiler {
 
         if (simpleAssignment) {
           longList.AddRange(leftExpression.LongList);
+
           if (leftExpression.Symbol.Type.IsFloating()) {
             AddMiddleCode(longList, MiddleOperator.PopEmpty);
           }
@@ -1569,9 +1570,9 @@ namespace CCompiler {
         expression = TypeCast.TypePromotion(expression);
       }
 
-      int offset = m_parameterOffsetStack.Pop();
-      m_parameterOffsetStack.Push(offset +
-                                ParameterType(expression.Symbol).Size());
+      int offset = m_parameterOffsetStack.Pop(),
+          parameterSize = ParameterType(expression.Symbol).Size();
+      m_parameterOffsetStack.Push(offset + parameterSize);
       return (new Expression(expression.Symbol, expression.LongList,
                              expression.LongList));
                                                 }

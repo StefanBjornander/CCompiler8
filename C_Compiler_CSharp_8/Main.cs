@@ -16,6 +16,8 @@ namespace CCompiler {
     public static void Main(string[] args) {
       Windows = !Linux;
 
+      (int list, int offset) = (1, 2);
+
       if (Start.Windows) {
         ObjectCodeTable.Initializer();
       }
