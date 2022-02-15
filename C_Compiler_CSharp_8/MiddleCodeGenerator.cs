@@ -1486,8 +1486,8 @@ namespace CCompiler {
       }
 
       Type functionType = functionExpression.Symbol.Type.IsPointer() ?
-                      functionExpression.Symbol.Type.PointerType :
-                      functionExpression.Symbol.Type;
+                          functionExpression.Symbol.Type.PointerType :
+                          functionExpression.Symbol.Type;
 
       List<Type> typeList = functionType.TypeList;
       Error.Check((typeList == null) ||
