@@ -626,14 +626,13 @@ namespace CCompiler {
       // lahf; syscall
       if (IsNullary()) {
         Error.ErrorXXX((operand0 == null) &&  (operand1 == null) && (operand2 == null));
-        return "\t" + operatorName;
+        return $"\t{operatorName}";
       }
       else if (IsUnary()) {
         // inc [bp + 2]; inc [global + 4]
         if (((operand0 is Register) || (operand0 is string)) &&
                  (operand1 is int) && (operand2 == null)) {
-          return "\t" + operatorName + " [" + operand0 +
-                 WithSign(operand1) + "]";
+          return $"\t{operatorName} [{operand0}{WithSign(operand1)}]";
         }
         // inc ax
         else if ((operand0 is Register) && (operand1 == null) &&
