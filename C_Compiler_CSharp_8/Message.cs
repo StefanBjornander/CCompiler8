@@ -152,7 +152,7 @@
     Unknown_register,
     Extern_enumeration_item_cannot_be_initialized,
     Only_array_struct_or_union_can_be_initialized_by_a_list,
-    Unmatched_register_size,
+    //Unmatched_register_size,
     Value_overflow,
     Invalid_expression,
     String_does_not_fit_in_array,

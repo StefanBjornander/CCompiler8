@@ -851,7 +851,7 @@ namespace CCompiler {
       }
     }
 
-    public static Expression Assignment(Expression leftExpression,
+     public static Expression Assignment(Expression leftExpression,
                                         Expression rightExpression,
                                         bool simpleAssignment) {
       rightExpression = TypeCast.ImplicitCast(rightExpression,
@@ -860,9 +860,8 @@ namespace CCompiler {
 
       if (register != null) {
         Symbol rightSymbol = rightExpression.Symbol;
-        Error.Check(AssemblyCode.SizeOfRegister(register.Value) ==
-                     rightExpression.Symbol.Type.Size(),
-                     Message.Unmatched_register_size);
+        Error.ErrorXXX(AssemblyCode.SizeOfRegister(register.Value) ==
+                       rightExpression.Symbol.Type.Size());
         List<MiddleCode> longList = new List<MiddleCode>();
         longList.AddRange(rightExpression.LongList);
         AddMiddleCode(longList, MiddleOperator.AssignRegister,
@@ -871,12 +870,11 @@ namespace CCompiler {
       }
       else {
         Error.Check(leftExpression.Symbol.IsAssignable(),
-                     leftExpression, Message.Not_assignable);
+                    leftExpression, Message.Not_assignable);
         List<MiddleCode> longList = new List<MiddleCode>();
 
         if (simpleAssignment) {
           longList.AddRange(leftExpression.LongList);
-  
           if (leftExpression.Symbol.Type.IsFloating()) {
             AddMiddleCode(longList, MiddleOperator.PopEmpty);
           }
