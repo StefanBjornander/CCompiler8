@@ -1460,6 +1460,7 @@ namespace CCompiler {
     public static Stack<List<Type>> m_typeListStack = new Stack<List<Type>>();
     public static Stack<int> m_parameterOffsetStack = new Stack<int>(),
                              m_parameterExtraStack = new Stack<int>();
+    public static int m_totalOffset = 0;
 
     public static void CallHeader(Expression expression) {
       Type type = expression.Symbol.Type;
@@ -1495,7 +1496,7 @@ namespace CCompiler {
       longList.AddRange(functionExpression.LongList);
 
       m_typeListStack.Pop();
-      m_parameterOffsetStack.Pop();
+      m_totalOffset -= m_parameterOffsetStack.Pop();
       int extraSize = m_parameterExtraStack.Pop();
 
       int totalOffset = 0;
@@ -1568,7 +1569,15 @@ namespace CCompiler {
       }
 
       int argumentSize = ParameterTypeSize(expression.Symbol.Type);
+
+      if (currentOffset == 0) {
+        //currentOffset += SymbolTable.FunctionHeaderSize;
+        m_totalOffset += SymbolTable.FunctionHeaderSize;
+      }
+
       m_parameterOffsetStack.Push(currentOffset + argumentSize);
+      m_totalOffset += argumentSize;
+
       m_parameterExtraStack.Push(extraSize);
 
       Expression argumentExpression =
@@ -1584,16 +1593,6 @@ namespace CCompiler {
         case Sort.Function:
         case Sort.String:
           return TypeSize.PointerSize;
-
-        /*case Sort.SignedChar:
-        case Sort.SignedShortInt:
-        case Sort.Logical:
-        case Sort.UnsignedChar:
-        case Sort.UnsignedShortInt:
-          return TypeSize.SignedIntegerSize;
-
-        case Sort.Float:
-          return Type.DoubleType.Size();*/
 
         default:
           return type.Size();
