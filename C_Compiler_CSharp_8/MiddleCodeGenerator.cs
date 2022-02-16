@@ -1458,7 +1458,8 @@ namespace CCompiler {
     // ---------------------------------------------------------------------------------------------------------------------
 
     public static Stack<List<Type>> m_typeListStack = new Stack<List<Type>>();
-    public static Stack<int> m_parameterOffsetStack = new Stack<int>();
+    public static Stack<int> m_parameterOffsetStack = new Stack<int>(),
+                             m_parameterExtraStack = new Stack<int>();
 
     public static void CallHeader(Expression expression) {
       Type type = expression.Symbol.Type;
@@ -1468,15 +1469,34 @@ namespace CCompiler {
       Type functionType = type.IsFunction() ? type : type.PointerType;
       m_typeListStack.Push(functionType.TypeList);
       m_parameterOffsetStack.Push(0);
+      m_parameterExtraStack.Push(0);
 
       AddMiddleCode(expression.LongList, MiddleOperator.PreCall,
                     SymbolTable.CurrentTable.CurrentOffset);
     }
 
     public static Expression CallExpression(Expression functionExpression,
-                                            List<Expression> argumentList){
+                                            List<Pair<Expression,int>> argumentPairList){
+      Type functionType = functionExpression.Symbol.Type.IsPointer() ?
+                          functionExpression.Symbol.Type.PointerType :
+                          functionExpression.Symbol.Type;
+
+      List<Type> typeList = functionType.TypeList;
+      Error.Check((typeList == null) ||
+                   (argumentPairList.Count >= typeList.Count),
+                   functionExpression,
+                   Message.Too_few_actual_parameters_in_function_call);
+      Error.Check(functionType.IsVariadic() || (typeList == null) ||
+                   (argumentPairList.Count == typeList.Count),
+                   functionExpression,
+                   Message.Too_many_parameters_in_function_call);
+    
+      List<MiddleCode> longList = new List<MiddleCode>();
+      longList.AddRange(functionExpression.LongList);
+
       m_typeListStack.Pop();
       m_parameterOffsetStack.Pop();
+      int extraSize = m_parameterExtraStack.Pop();
 
       int totalOffset = 0;
       foreach (int currentOffset in m_parameterOffsetStack) {
@@ -1485,53 +1505,27 @@ namespace CCompiler {
         }
       }
 
-      Type functionType = functionExpression.Symbol.Type.IsPointer() ?
-                          functionExpression.Symbol.Type.PointerType :
-                          functionExpression.Symbol.Type;
+      foreach (Pair<Expression,int> pair in argumentPairList) {
+        Expression argumentExpression = pair.First;
+        int argumentOffset = pair.Second + SymbolTable.FunctionHeaderSize;
+        longList.AddRange(argumentExpression.LongList);
+        Type argumentType = argumentExpression.Symbol.Type;
 
-      List<Type> typeList = functionType.TypeList;
-      Error.Check((typeList == null) ||
-                   (argumentList.Count >= typeList.Count),
-                   functionExpression,
-                   Message.Too_few_actual_parameters_in_function_call);
-      Error.Check(functionType.IsVariadic() || (typeList == null) ||
-                   (argumentList.Count == typeList.Count),
-                   functionExpression,
-                   Message.Too_many_parameters_in_function_call);
-    
-      List<MiddleCode> longList = new List<MiddleCode>();
-      longList.AddRange(functionExpression.LongList);
-
-      int index = 0, offset = SymbolTable.FunctionHeaderSize, extra = 0;
-      foreach (Expression argumentExpression in argumentList) {
-        Type parameterType;
-        if ((typeList != null) && (index < typeList.Count)) {
-          parameterType = typeList[index++];
-        }
-        else {
-          parameterType = ParameterType(argumentExpression.Symbol);
-          extra += parameterType.Size();
-        }
-
-        Expression parameterExpression = TypeCast.ImplicitCast(argumentExpression, parameterType);
-        longList.AddRange(parameterExpression.LongList);
-
-        if (parameterType.IsStructOrUnion()) {
+        if (argumentType.IsStructOrUnion()) {
           AddMiddleCode(longList, MiddleOperator.ParameterInitSize,
                         SymbolTable.CurrentTable.CurrentOffset + totalOffset +
-                        offset, parameterType, parameterExpression.Symbol);
+                        argumentOffset, argumentType, argumentExpression.Symbol);
         }
 
         AddMiddleCode(longList, MiddleOperator.Parameter,
                       SymbolTable.CurrentTable.CurrentOffset + totalOffset +
-                      offset, parameterType, parameterExpression.Symbol);
-        offset += parameterType.Size();
+                      argumentOffset, argumentType, argumentExpression.Symbol);
       }
 
       Symbol functionSymbol = functionExpression.Symbol;
       AddMiddleCode(longList, MiddleOperator.Call,
                     SymbolTable.CurrentTable.CurrentOffset + totalOffset,
-                    functionSymbol, extra);
+                    functionSymbol, extraSize);
       AddMiddleCode(longList, MiddleOperator.PostCall,
                     SymbolTable.CurrentTable.CurrentOffset + totalOffset);
     
@@ -1559,40 +1553,50 @@ namespace CCompiler {
       return (new Expression(returnSymbol, shortList, longList));
     }
 
-    public static Expression ArgumentExpression(int index,
+    public static Pair<Expression, int> ArgumentExpression(int index,
                                                 Expression expression) {
       List<Type> typeList = m_typeListStack.Peek();
+      int currentOffset = m_parameterOffsetStack.Pop(),
+          extraSize = m_parameterExtraStack.Pop();
 
       if ((typeList != null) && (index < typeList.Count)) {
         expression = TypeCast.ImplicitCast(expression, typeList[index]);
       }
       else {
         expression = TypeCast.TypePromotion(expression);
+        extraSize += ParameterTypeSize(expression.Symbol.Type);
       }
 
-      int offset = m_parameterOffsetStack.Pop(),
-          parameterSize = ParameterType(expression.Symbol).Size();
-      m_parameterOffsetStack.Push(offset + parameterSize);
-      return (new Expression(expression.Symbol, expression.LongList,
-                             expression.LongList));
-                                                }
- 
-    private static Type ParameterType(Symbol symbol) {
-      switch (symbol.Type.Sort) {
+      int argumentSize = ParameterTypeSize(expression.Symbol.Type);
+      m_parameterOffsetStack.Push(currentOffset + argumentSize);
+      m_parameterExtraStack.Push(extraSize);
+
+      Expression argumentExpression =
+        new Expression(expression.Symbol, expression.LongList,
+                       expression.LongList);
+      return (new Pair<Expression,int>(argumentExpression, currentOffset));
+    }
+
+    // f(x, g(y))
+    private static int ParameterTypeSize(Type type) {
+      switch (type.Sort) {
         case Sort.Array:
-          return (new Type(symbol.Type.ArrayType));
-
         case Sort.Function:
-          return (new Type(symbol.Type));
-
         case Sort.String:
-          return (new Type(new Type(Sort.SignedChar)));
+          return TypeSize.PointerSize;
 
+        /*case Sort.SignedChar:
+        case Sort.SignedShortInt:
         case Sort.Logical:
-          return Type.SignedIntegerType;
+        case Sort.UnsignedChar:
+        case Sort.UnsignedShortInt:
+          return TypeSize.SignedIntegerSize;
+
+        case Sort.Float:
+          return Type.DoubleType.Size();*/
 
         default:
-          return symbol.Type;
+          return type.Size();
       }
     }
 

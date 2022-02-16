@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.2
 // Machine:  LAPTOP-7Q575VHS
-// DateTime: 2022-02-15 23:29:47
+// DateTime: 2022-02-16 16:56:49
 // UserName: stefa
-// Input file <MainParser.gppg - 2022-02-15 22:59:45>
+// Input file <MainParser.gppg - 2022-02-16 16:56:28>
 
 // options: lines gplex
 
@@ -56,6 +56,7 @@ public partial struct ValueType
   public MiddleOperator middleOperator;
   public Expression expression;
   public List<Expression> expression_list;
+  public List<Pair<Expression,int>> argument_pair_list;
   public Statement statement;
   public Pair<List<Symbol>,Boolean> parameter_pair;
   public List<MiddleCode> middle_code_list;
@@ -87,12 +88,12 @@ public class ScanObj {
 [GeneratedCodeAttribute( "Gardens Point Parser Generator", "1.5.2")]
 public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
-  // Verbatim content from MainParser.gppg - 2022-02-15 22:59:45
+  // Verbatim content from MainParser.gppg - 2022-02-16 16:56:28
 #line 8 "MainParser.gppg"
   public static Stack<Specifier> SpecifierStack = new Stack<Specifier>();
   public static Stack<Scope> ScopeStack = new Stack<Scope>();
 #line default
-  // End verbatim content from MainParser.gppg - 2022-02-15 22:59:45
+  // End verbatim content from MainParser.gppg - 2022-02-16 16:56:28
 
 #pragma warning disable 649
   private static Dictionary<int, string> aliases;
@@ -782,7 +783,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
     switch (action)
     {
       case 6: // Anon@1 -> /* empty */
-#line 128 "MainParser.gppg"
+#line 129 "MainParser.gppg"
                                             {
       MiddleCodeGenerator.FunctionHeader
         (SpecifierStack.Pop(), ValueStack[ValueStack.Depth-1].declarator);
@@ -790,7 +791,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 7: // Anon@2 -> /* empty */
-#line 132 "MainParser.gppg"
+#line 133 "MainParser.gppg"
                               {
       MiddleCodeGenerator.FunctionDefinition();
     }
@@ -800,7 +801,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
               //                        optional_declaration_list, Anon@2, LEFT_BLOCK, 
               //                        optional_declaration_list, optional_statement_list, 
               //                        RIGHT_BLOCK
-#line 135 "MainParser.gppg"
+#line 136 "MainParser.gppg"
                                                                              {
       ValueStack[ValueStack.Depth-2].statement.CodeList.InsertRange(0, ValueStack[ValueStack.Depth-3].middle_code_list);
       MiddleCodeGenerator.BackpatchGoto();
@@ -809,14 +810,14 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 9: // Anon@3 -> /* empty */
-#line 140 "MainParser.gppg"
+#line 141 "MainParser.gppg"
                {
       MiddleCodeGenerator.FunctionHeader(null, ValueStack[ValueStack.Depth-1].declarator);
     }
 #line default
         break;
       case 10: // Anon@4 -> /* empty */
-#line 143 "MainParser.gppg"
+#line 144 "MainParser.gppg"
                               {
       MiddleCodeGenerator.FunctionDefinition();
     }
@@ -825,7 +826,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
       case 11: // function_definition -> declarator, Anon@3, optional_declaration_list, Anon@4, 
                //                        LEFT_BLOCK, optional_declaration_list, 
                //                        optional_statement_list, RIGHT_BLOCK
-#line 146 "MainParser.gppg"
+#line 147 "MainParser.gppg"
                                                                              {
       ValueStack[ValueStack.Depth-2].statement.CodeList.InsertRange(0, ValueStack[ValueStack.Depth-3].middle_code_list);
       MiddleCodeGenerator.BackpatchGoto();
@@ -834,17 +835,17 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 12: // optional_declaration_list -> /* empty */
-#line 153 "MainParser.gppg"
+#line 154 "MainParser.gppg"
                      { CurrentSemanticValue.middle_code_list = new List<MiddleCode>(); }
 #line default
         break;
       case 13: // optional_declaration_list -> declaration_list
-#line 154 "MainParser.gppg"
+#line 155 "MainParser.gppg"
                      { CurrentSemanticValue.middle_code_list = ValueStack[ValueStack.Depth-1].middle_code_list; }
 #line default
         break;
       case 14: // declaration -> declaration_specifier_list, SEMICOLON
-#line 157 "MainParser.gppg"
+#line 158 "MainParser.gppg"
                                          {
       SpecifierStack.Push(Specifier.SpecifierList(ValueStack[ValueStack.Depth-2].object_list));
       CurrentSemanticValue.middle_code_list = new List<MiddleCode>();
@@ -852,7 +853,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 15: // declaration -> declaration_specifier_list_x, declarator_list, SEMICOLON
-#line 161 "MainParser.gppg"
+#line 162 "MainParser.gppg"
                                                            {
       SpecifierStack.Pop();
       CurrentSemanticValue.middle_code_list = ValueStack[ValueStack.Depth-2].middle_code_list;
@@ -860,14 +861,14 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 16: // declaration_specifier_list_x -> declaration_specifier_list
-#line 167 "MainParser.gppg"
+#line 168 "MainParser.gppg"
                              {
     SpecifierStack.Push(Specifier.SpecifierList(ValueStack[ValueStack.Depth-1].object_list));
   }
 #line default
         break;
       case 17: // declaration_specifier_list -> declaration_specifier
-#line 172 "MainParser.gppg"
+#line 173 "MainParser.gppg"
                           {
       CurrentSemanticValue.object_list = new List<object>();
       CurrentSemanticValue.object_list.Add(ValueStack[ValueStack.Depth-1].obj);
@@ -875,7 +876,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 18: // declaration_specifier_list -> declaration_specifier, declaration_specifier_list
-#line 176 "MainParser.gppg"
+#line 177 "MainParser.gppg"
                                                      {
       ValueStack[ValueStack.Depth-1].object_list.Add(ValueStack[ValueStack.Depth-2].obj);
       CurrentSemanticValue.object_list = ValueStack[ValueStack.Depth-1].object_list;
@@ -883,102 +884,102 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 19: // declaration_specifier -> CONSTANT
-#line 182 "MainParser.gppg"
+#line 183 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Constant; }
 #line default
         break;
       case 20: // declaration_specifier -> VOLATILE
-#line 183 "MainParser.gppg"
+#line 184 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Volatile; }
 #line default
         break;
       case 21: // declaration_specifier -> AUTO
-#line 184 "MainParser.gppg"
+#line 185 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Auto;     }
 #line default
         break;
       case 22: // declaration_specifier -> REGISTER
-#line 185 "MainParser.gppg"
+#line 186 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Register; }
 #line default
         break;
       case 23: // declaration_specifier -> STATIC
-#line 186 "MainParser.gppg"
+#line 187 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Static;   }
 #line default
         break;
       case 24: // declaration_specifier -> EXTERN
-#line 187 "MainParser.gppg"
+#line 188 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Extern;   }
 #line default
         break;
       case 25: // declaration_specifier -> TYPEDEF
-#line 188 "MainParser.gppg"
+#line 189 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Typedef;  }
 #line default
         break;
       case 26: // declaration_specifier -> VOID
-#line 189 "MainParser.gppg"
+#line 190 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Void;     }
 #line default
         break;
       case 27: // declaration_specifier -> CHAR
-#line 190 "MainParser.gppg"
+#line 191 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Char;     }
 #line default
         break;
       case 28: // declaration_specifier -> SHORT
-#line 191 "MainParser.gppg"
+#line 192 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Short;    }
 #line default
         break;
       case 29: // declaration_specifier -> INT
-#line 192 "MainParser.gppg"
+#line 193 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Int;      }
 #line default
         break;
       case 30: // declaration_specifier -> LONG
-#line 193 "MainParser.gppg"
+#line 194 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Long;     }
 #line default
         break;
       case 31: // declaration_specifier -> FLOAT
-#line 194 "MainParser.gppg"
+#line 195 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Float;    }
 #line default
         break;
       case 32: // declaration_specifier -> DOUBLE
-#line 195 "MainParser.gppg"
+#line 196 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Double;   }
 #line default
         break;
       case 33: // declaration_specifier -> SIGNED
-#line 196 "MainParser.gppg"
+#line 197 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Signed;   }
 #line default
         break;
       case 34: // declaration_specifier -> UNSIGNED
-#line 197 "MainParser.gppg"
+#line 198 "MainParser.gppg"
                               { CurrentSemanticValue.obj = Mask.Unsigned; }
 #line default
         break;
       case 35: // declaration_specifier -> struct_or_union_specifier
-#line 198 "MainParser.gppg"
-                              { CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].type;            }
-#line default
-        break;
-      case 36: // declaration_specifier -> enum_specifier
 #line 199 "MainParser.gppg"
                               { CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].type;            }
 #line default
         break;
-      case 37: // declaration_specifier -> TYPEDEF_NAME
+      case 36: // declaration_specifier -> enum_specifier
 #line 200 "MainParser.gppg"
                               { CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].type;            }
 #line default
         break;
+      case 37: // declaration_specifier -> TYPEDEF_NAME
+#line 201 "MainParser.gppg"
+                              { CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].type;            }
+#line default
+        break;
       case 38: // Anon@5 -> /* empty */
-#line 203 "MainParser.gppg"
+#line 204 "MainParser.gppg"
                                   {
       MiddleCodeGenerator.StructUnionHeader(ValueStack[ValueStack.Depth-2].sort, ValueStack[ValueStack.Depth-1].name);
     }
@@ -986,48 +987,48 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 39: // struct_or_union_specifier -> struct_or_union, optional_name, Anon@5, LEFT_BLOCK, 
                //                              declaration_list, RIGHT_BLOCK
-#line 206 "MainParser.gppg"
+#line 207 "MainParser.gppg"
                                             {
       CurrentSemanticValue.type = MiddleCodeGenerator.StructUnionSpecifier();
     }
 #line default
         break;
       case 40: // struct_or_union_specifier -> struct_or_union, NAME
-#line 209 "MainParser.gppg"
+#line 210 "MainParser.gppg"
                          {
       CurrentSemanticValue.type = MiddleCodeGenerator.StructUnionLookup(ValueStack[ValueStack.Depth-2].sort, ValueStack[ValueStack.Depth-1].name);
     }
 #line default
         break;
       case 41: // struct_or_union -> STRUCT
-#line 214 "MainParser.gppg"
+#line 215 "MainParser.gppg"
            { CurrentSemanticValue.sort = Sort.Struct; }
 #line default
         break;
       case 42: // struct_or_union -> UNION
-#line 215 "MainParser.gppg"
+#line 216 "MainParser.gppg"
            { CurrentSemanticValue.sort = Sort.Union;  }
 #line default
         break;
       case 43: // optional_name -> /* empty */
-#line 218 "MainParser.gppg"
+#line 219 "MainParser.gppg"
                 { CurrentSemanticValue.name = null; }
 #line default
         break;
       case 44: // optional_name -> NAME
-#line 219 "MainParser.gppg"
+#line 220 "MainParser.gppg"
                 { CurrentSemanticValue.name = ValueStack[ValueStack.Depth-1].name;   }
 #line default
         break;
       case 45: // declaration_list -> declaration
-#line 222 "MainParser.gppg"
+#line 223 "MainParser.gppg"
                 {
       CurrentSemanticValue.middle_code_list = ValueStack[ValueStack.Depth-1].middle_code_list;
     }
 #line default
         break;
       case 46: // declaration_list -> declaration_list, declaration
-#line 225 "MainParser.gppg"
+#line 226 "MainParser.gppg"
                                  {
       ValueStack[ValueStack.Depth-2].middle_code_list.AddRange(ValueStack[ValueStack.Depth-1].middle_code_list);
       CurrentSemanticValue.middle_code_list = ValueStack[ValueStack.Depth-2].middle_code_list;
@@ -1035,7 +1036,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 47: // Anon@6 -> /* empty */
-#line 231 "MainParser.gppg"
+#line 232 "MainParser.gppg"
                        {
       MiddleCodeGenerator.EnumumerationHeader();
     }
@@ -1043,21 +1044,21 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 48: // enum_specifier -> ENUM, optional_name, Anon@6, LEFT_BLOCK, enum_list, 
                //                   RIGHT_BLOCK
-#line 234 "MainParser.gppg"
+#line 235 "MainParser.gppg"
                                      {
       CurrentSemanticValue.type = MiddleCodeGenerator.EnumumerationSpecifier(ValueStack[ValueStack.Depth-5].name, ValueStack[ValueStack.Depth-2].symbol_set);
     }
 #line default
         break;
       case 49: // enum_specifier -> ENUM, NAME
-#line 237 "MainParser.gppg"
+#line 238 "MainParser.gppg"
               {
       CurrentSemanticValue.type = MiddleCodeGenerator.EnumumerationLookup(ValueStack[ValueStack.Depth-1].name);
     }
 #line default
         break;
       case 50: // enum_list -> enum
-#line 242 "MainParser.gppg"
+#line 243 "MainParser.gppg"
          {
       ISet<Symbol> memberSet = new HashSet<Symbol>();
       memberSet.Add(ValueStack[ValueStack.Depth-1].symbol);
@@ -1066,7 +1067,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 51: // enum_list -> enum_list, COMMA, enum
-#line 247 "MainParser.gppg"
+#line 248 "MainParser.gppg"
                          {
       ISet<Symbol> memberSet = ValueStack[ValueStack.Depth-3].symbol_set;
       memberSet.Add(ValueStack[ValueStack.Depth-1].symbol);
@@ -1075,21 +1076,21 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 52: // enum -> NAME
-#line 254 "MainParser.gppg"
+#line 255 "MainParser.gppg"
          {
       CurrentSemanticValue.symbol = MiddleCodeGenerator.EnumerationItem(ValueStack[ValueStack.Depth-1].name, null);
     }
 #line default
         break;
       case 53: // enum -> NAME, ASSIGN, constant_integral_expression
-#line 257 "MainParser.gppg"
+#line 258 "MainParser.gppg"
                                              {
       CurrentSemanticValue.symbol = MiddleCodeGenerator.EnumerationItem(ValueStack[ValueStack.Depth-3].name, ValueStack[ValueStack.Depth-1].expression.Symbol);
     }
 #line default
         break;
       case 54: // declarator_list -> initialization_bitfield_simple_declarator
-#line 262 "MainParser.gppg"
+#line 263 "MainParser.gppg"
                                               {
       CurrentSemanticValue.middle_code_list = ValueStack[ValueStack.Depth-1].middle_code_list;
     }
@@ -1097,7 +1098,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 55: // declarator_list -> declarator_list, COMMA, 
                //                    initialization_bitfield_simple_declarator
-#line 265 "MainParser.gppg"
+#line 266 "MainParser.gppg"
                                                                     {
       ValueStack[ValueStack.Depth-3].middle_code_list.AddRange(ValueStack[ValueStack.Depth-1].middle_code_list);
       CurrentSemanticValue.middle_code_list = ValueStack[ValueStack.Depth-3].middle_code_list;
@@ -1105,7 +1106,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 56: // initialization_bitfield_simple_declarator -> declarator
-#line 271 "MainParser.gppg"
+#line 272 "MainParser.gppg"
                {
       CurrentSemanticValue.middle_code_list = MiddleCodeGenerator.Declarator
         (SpecifierStack.Peek(), ValueStack[ValueStack.Depth-1].declarator, null, null);
@@ -1113,7 +1114,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 57: // initialization_bitfield_simple_declarator -> declarator, ASSIGN, initializer
-#line 275 "MainParser.gppg"
+#line 276 "MainParser.gppg"
                                   {
       CurrentSemanticValue.middle_code_list = MiddleCodeGenerator.Declarator
              (SpecifierStack.Peek(), ValueStack[ValueStack.Depth-3].declarator, ValueStack[ValueStack.Depth-1].obj, null);
@@ -1122,7 +1123,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 58: // initialization_bitfield_simple_declarator -> optional_simple_declarator, COLON, 
                //                                              constant_integral_expression
-#line 279 "MainParser.gppg"
+#line 280 "MainParser.gppg"
                                                                   {
       MiddleCodeGenerator.Declarator
         (SpecifierStack.Peek(), ValueStack[ValueStack.Depth-3].declarator, null, ValueStack[ValueStack.Depth-1].expression.Symbol);
@@ -1131,38 +1132,38 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 59: // optional_simple_declarator -> /* empty */
-#line 286 "MainParser.gppg"
+#line 287 "MainParser.gppg"
                 { CurrentSemanticValue.declarator = null; }
 #line default
         break;
       case 60: // optional_simple_declarator -> declarator
-#line 287 "MainParser.gppg"
+#line 288 "MainParser.gppg"
                 { CurrentSemanticValue.declarator = ValueStack[ValueStack.Depth-1].declarator;   }
 #line default
         break;
       case 61: // declarator -> optional_pointer_list, direct_declarator
-#line 290 "MainParser.gppg"
+#line 291 "MainParser.gppg"
                                             {
       CurrentSemanticValue.declarator = MiddleCodeGenerator.PointerDeclarator(ValueStack[ValueStack.Depth-2].type_list, ValueStack[ValueStack.Depth-1].declarator);
     }
 #line default
         break;
       case 62: // optional_pointer_list -> /* empty */
-#line 295 "MainParser.gppg"
+#line 296 "MainParser.gppg"
                  {
       CurrentSemanticValue.type_list = new List<CCompiler.Type>();
     }
 #line default
         break;
       case 63: // optional_pointer_list -> pointer_list
-#line 298 "MainParser.gppg"
+#line 299 "MainParser.gppg"
                  {
       CurrentSemanticValue.type_list = ValueStack[ValueStack.Depth-1].type_list;
     }
 #line default
         break;
       case 64: // pointer_list -> pointer_marker
-#line 303 "MainParser.gppg"
+#line 304 "MainParser.gppg"
                    {
       CurrentSemanticValue.type_list = new List<CCompiler.Type>();
       CurrentSemanticValue.type_list.Add(ValueStack[ValueStack.Depth-1].type);
@@ -1170,7 +1171,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 65: // pointer_list -> pointer_list, pointer_marker
-#line 307 "MainParser.gppg"
+#line 308 "MainParser.gppg"
                                 {
       ValueStack[ValueStack.Depth-2].type_list.Add(ValueStack[ValueStack.Depth-1].type);
       CurrentSemanticValue.type_list = ValueStack[ValueStack.Depth-2].type_list;
@@ -1178,21 +1179,21 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 66: // pointer_marker -> ASTERRISK, optional_qualifier_list
-#line 313 "MainParser.gppg"
+#line 314 "MainParser.gppg"
                                       {
       CurrentSemanticValue.type = Specifier.QualifierList(ValueStack[ValueStack.Depth-1].mask_list);
     }
 #line default
         break;
       case 67: // optional_qualifier_list -> /* empty */
-#line 318 "MainParser.gppg"
+#line 319 "MainParser.gppg"
                    {
       CurrentSemanticValue.mask_list = new List<Mask>();
     }
 #line default
         break;
       case 68: // optional_qualifier_list -> optional_qualifier_list, qualifier
-#line 321 "MainParser.gppg"
+#line 322 "MainParser.gppg"
                                       {
       CurrentSemanticValue.mask_list = ValueStack[ValueStack.Depth-2].mask_list;
       CurrentSemanticValue.mask_list.Add(ValueStack[ValueStack.Depth-1].mask);
@@ -1200,24 +1201,24 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 69: // Anon@7 -> /* empty */
-#line 327 "MainParser.gppg"
+#line 328 "MainParser.gppg"
             { CurrentSemanticValue.mask = Mask.Constant; }
 #line default
         break;
       case 70: // qualifier -> CONSTANT, Anon@7, VOLATILE
-#line 328 "MainParser.gppg"
+#line 329 "MainParser.gppg"
             { CurrentSemanticValue.mask = Mask.Volatile; }
 #line default
         break;
       case 71: // direct_declarator -> NAME
-#line 331 "MainParser.gppg"
+#line 332 "MainParser.gppg"
          {
       CurrentSemanticValue.declarator = new Declarator(ValueStack[ValueStack.Depth-1].name);
     }
 #line default
         break;
       case 72: // direct_declarator -> LEFT_PARENTHESIS, declarator, RIGHT_PARENTHESIS
-#line 334 "MainParser.gppg"
+#line 335 "MainParser.gppg"
                                                   {
       CurrentSemanticValue.declarator = ValueStack[ValueStack.Depth-2].declarator; 
     }
@@ -1225,7 +1226,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 73: // direct_declarator -> direct_declarator, LEFT_SQUARE, 
                //                      optional_constant_integral_expression, RIGHT_SQUARE
-#line 338 "MainParser.gppg"
+#line 339 "MainParser.gppg"
                                                        {
       CurrentSemanticValue.declarator = MiddleCodeGenerator.ArrayType(ValueStack[ValueStack.Depth-4].declarator, ValueStack[ValueStack.Depth-2].expression);
     }
@@ -1233,7 +1234,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 74: // direct_declarator -> direct_declarator, LEFT_PARENTHESIS, 
                //                      parameter_ellipse_list, RIGHT_PARENTHESIS
-#line 342 "MainParser.gppg"
+#line 343 "MainParser.gppg"
                                                               {
       CurrentSemanticValue.declarator = MiddleCodeGenerator.
            NewFunctionDeclaration(ValueStack[ValueStack.Depth-4].declarator, ValueStack[ValueStack.Depth-2].parameter_pair.First, ValueStack[ValueStack.Depth-2].parameter_pair.Second);
@@ -1242,45 +1243,45 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 75: // direct_declarator -> direct_declarator, LEFT_PARENTHESIS, optional_name_list, 
                //                      RIGHT_PARENTHESIS
-#line 347 "MainParser.gppg"
+#line 348 "MainParser.gppg"
                                          {
       CurrentSemanticValue.declarator = MiddleCodeGenerator.OldFunctionDeclaration(ValueStack[ValueStack.Depth-4].declarator, ValueStack[ValueStack.Depth-2].string_list);
     }
 #line default
         break;
       case 76: // optional_parameter_ellipse_list -> /* empty */
-#line 352 "MainParser.gppg"
+#line 353 "MainParser.gppg"
                            { CurrentSemanticValue.parameter_pair = null; }
 #line default
         break;
       case 77: // optional_parameter_ellipse_list -> parameter_ellipse_list
-#line 353 "MainParser.gppg"
+#line 354 "MainParser.gppg"
                            { CurrentSemanticValue.parameter_pair = ValueStack[ValueStack.Depth-1].parameter_pair;   }
 #line default
         break;
       case 78: // parameter_ellipse_list -> parameter_list
-#line 356 "MainParser.gppg"
+#line 357 "MainParser.gppg"
                    {
       CurrentSemanticValue.parameter_pair = new Pair<List<Symbol>,Boolean>(ValueStack[ValueStack.Depth-1].symbol_list, false);
     }
 #line default
         break;
       case 79: // parameter_ellipse_list -> parameter_list, COMMA, ELLIPSE
-#line 359 "MainParser.gppg"
+#line 360 "MainParser.gppg"
                                  {
       CurrentSemanticValue.parameter_pair = new Pair<List<Symbol>,Boolean>(ValueStack[ValueStack.Depth-3].symbol_list, true);
     }
 #line default
         break;
       case 80: // Anon@8 -> /* empty */
-#line 364 "MainParser.gppg"
+#line 365 "MainParser.gppg"
     { ScopeStack.Push(SymbolTable.CurrentTable.Scope);
       SymbolTable.CurrentTable.Scope = Scope.Parameter;
     }
 #line default
         break;
       case 81: // parameter_list -> Anon@8, parameter_declaration
-#line 367 "MainParser.gppg"
+#line 368 "MainParser.gppg"
                           {
       SymbolTable.CurrentTable.Scope = ScopeStack.Pop();
       CurrentSemanticValue.symbol_list = new List<Symbol>();
@@ -1289,7 +1290,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 82: // Anon@9 -> /* empty */
-#line 372 "MainParser.gppg"
+#line 373 "MainParser.gppg"
                          {
       ScopeStack.Push(SymbolTable.CurrentTable.Scope);
       SymbolTable.CurrentTable.Scope = Scope.Parameter;
@@ -1297,7 +1298,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 83: // parameter_list -> parameter_list, COMMA, Anon@9, parameter_declaration
-#line 376 "MainParser.gppg"
+#line 377 "MainParser.gppg"
                           {
       SymbolTable.CurrentTable.Scope = ScopeStack.Pop();
       ValueStack[ValueStack.Depth-4].symbol_list.Add(ValueStack[ValueStack.Depth-1].symbol);
@@ -1306,38 +1307,38 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 84: // parameter_declaration -> declaration_specifier_list
-#line 383 "MainParser.gppg"
+#line 384 "MainParser.gppg"
                                {
       CurrentSemanticValue.symbol = MiddleCodeGenerator.Parameter(Specifier.SpecifierList(ValueStack[ValueStack.Depth-1].object_list), null);
     }
 #line default
         break;
       case 85: // parameter_declaration -> declaration_specifier_list_x, declarator
-#line 386 "MainParser.gppg"
+#line 387 "MainParser.gppg"
                                             {
       CurrentSemanticValue.symbol = MiddleCodeGenerator.Parameter(SpecifierStack.Pop(), ValueStack[ValueStack.Depth-1].declarator);
     }
 #line default
         break;
       case 86: // parameter_declaration -> declaration_specifier_list_x, abstract_declarator
-#line 389 "MainParser.gppg"
+#line 390 "MainParser.gppg"
                                                      {
       CurrentSemanticValue.symbol = MiddleCodeGenerator.Parameter(SpecifierStack.Pop(), ValueStack[ValueStack.Depth-1].declarator);
     }
 #line default
         break;
       case 87: // optional_name_list -> /* empty */
-#line 394 "MainParser.gppg"
+#line 395 "MainParser.gppg"
                 { CurrentSemanticValue.string_list = new List<string>(); }
 #line default
         break;
       case 88: // optional_name_list -> name_list
-#line 395 "MainParser.gppg"
+#line 396 "MainParser.gppg"
                 { CurrentSemanticValue.string_list = ValueStack[ValueStack.Depth-1].string_list;                 }
 #line default
         break;
       case 89: // name_list -> NAME
-#line 398 "MainParser.gppg"
+#line 399 "MainParser.gppg"
          {
       CurrentSemanticValue.string_list = new List<string>();
       CurrentSemanticValue.string_list.Add(ValueStack[ValueStack.Depth-1].name);
@@ -1345,7 +1346,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 90: // name_list -> name_list, COMMA, NAME
-#line 402 "MainParser.gppg"
+#line 403 "MainParser.gppg"
                          {
       ValueStack[ValueStack.Depth-3].string_list.Add(ValueStack[ValueStack.Depth-1].name); 
       CurrentSemanticValue.string_list = ValueStack[ValueStack.Depth-3].string_list;
@@ -1353,21 +1354,21 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 91: // initializer -> assignment_expression
-#line 408 "MainParser.gppg"
+#line 409 "MainParser.gppg"
                           {
       CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].expression;
     }
 #line default
         break;
       case 92: // initializer -> LEFT_BLOCK, initializer_list, optional_comma, RIGHT_BLOCK
-#line 411 "MainParser.gppg"
+#line 412 "MainParser.gppg"
                                                            {
       CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-3].object_list;
     }
 #line default
         break;
       case 95: // initializer_list -> initializer
-#line 420 "MainParser.gppg"
+#line 421 "MainParser.gppg"
                 {
       CurrentSemanticValue.object_list = new List<object>();
       CurrentSemanticValue.object_list.Add(ValueStack[ValueStack.Depth-1].obj);
@@ -1375,7 +1376,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 96: // initializer_list -> initializer_list, COMMA, initializer
-#line 424 "MainParser.gppg"
+#line 425 "MainParser.gppg"
                                        {
       ValueStack[ValueStack.Depth-3].object_list.Add(ValueStack[ValueStack.Depth-1].obj);
       CurrentSemanticValue.object_list = ValueStack[ValueStack.Depth-3].object_list;
@@ -1383,14 +1384,14 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 97: // abstract_declarator -> pointer_list
-#line 430 "MainParser.gppg"
+#line 431 "MainParser.gppg"
                  {
       CurrentSemanticValue.declarator = MiddleCodeGenerator.PointerDeclarator(ValueStack[ValueStack.Depth-1].type_list, null);
     }
 #line default
         break;
       case 98: // abstract_declarator -> optional_pointer_list, direct_abstract_declarator
-#line 433 "MainParser.gppg"
+#line 434 "MainParser.gppg"
                                                      {
       CurrentSemanticValue.declarator = MiddleCodeGenerator.PointerDeclarator(ValueStack[ValueStack.Depth-2].type_list, ValueStack[ValueStack.Depth-1].declarator);
     }
@@ -1398,7 +1399,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 99: // direct_abstract_declarator -> LEFT_PARENTHESIS, abstract_declarator, 
                //                               RIGHT_PARENTHESIS
-#line 438 "MainParser.gppg"
+#line 439 "MainParser.gppg"
                                                            {
       CurrentSemanticValue.declarator = ValueStack[ValueStack.Depth-2].declarator;
     }
@@ -1407,7 +1408,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
       case 100: // direct_abstract_declarator -> LEFT_SQUARE, 
                 //                               optional_constant_integral_expression, 
                 //                               RIGHT_SQUARE
-#line 441 "MainParser.gppg"
+#line 442 "MainParser.gppg"
                                                                    {
       CurrentSemanticValue.declarator = MiddleCodeGenerator.ArrayType(null, ValueStack[ValueStack.Depth-2].expression);
     }
@@ -1416,7 +1417,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
       case 101: // direct_abstract_declarator -> direct_abstract_declarator, LEFT_SQUARE, 
                 //                               optional_constant_integral_expression, 
                 //                               RIGHT_SQUARE
-#line 445 "MainParser.gppg"
+#line 446 "MainParser.gppg"
                                                                    {
       CurrentSemanticValue.declarator = MiddleCodeGenerator.ArrayType(ValueStack[ValueStack.Depth-4].declarator, ValueStack[ValueStack.Depth-2].expression);
     }
@@ -1424,7 +1425,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 102: // direct_abstract_declarator -> LEFT_PARENTHESIS, optional_parameter_ellipse_list, 
                 //                               RIGHT_PARENTHESIS
-#line 448 "MainParser.gppg"
+#line 449 "MainParser.gppg"
                                                                        {
       CurrentSemanticValue.declarator = MiddleCodeGenerator.
            NewFunctionDeclaration(null, ValueStack[ValueStack.Depth-2].parameter_pair.First, ValueStack[ValueStack.Depth-2].parameter_pair.Second);
@@ -1434,7 +1435,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
       case 103: // direct_abstract_declarator -> direct_abstract_declarator, LEFT_PARENTHESIS, 
                 //                               optional_parameter_ellipse_list, 
                 //                               RIGHT_PARENTHESIS
-#line 453 "MainParser.gppg"
+#line 454 "MainParser.gppg"
                                                                        {
       CurrentSemanticValue.declarator = MiddleCodeGenerator.
            NewFunctionDeclaration(ValueStack[ValueStack.Depth-4].declarator, ValueStack[ValueStack.Depth-2].parameter_pair.First, ValueStack[ValueStack.Depth-2].parameter_pair.Second);
@@ -1442,7 +1443,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 104: // optional_statement_list -> /* empty */
-#line 461 "MainParser.gppg"
+#line 462 "MainParser.gppg"
                 {
       CurrentSemanticValue.statement = new Statement(new List<MiddleCode>(),
                          new HashSet<MiddleCode>());
@@ -1450,7 +1451,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 105: // optional_statement_list -> optional_statement_list, statement
-#line 465 "MainParser.gppg"
+#line 466 "MainParser.gppg"
                                       {
       MiddleCodeGenerator.Backpatch(ValueStack[ValueStack.Depth-2].statement.NextSet, ValueStack[ValueStack.Depth-1].statement.CodeList);
       List<MiddleCode> codeList = new List<MiddleCode>();
@@ -1461,28 +1462,28 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 106: // statement -> opened_statement
-#line 474 "MainParser.gppg"
-                     { CurrentSemanticValue.statement = ValueStack[ValueStack.Depth-1].statement; }
-#line default
-        break;
-      case 107: // statement -> closed_statement
 #line 475 "MainParser.gppg"
                      { CurrentSemanticValue.statement = ValueStack[ValueStack.Depth-1].statement; }
 #line default
         break;
+      case 107: // statement -> closed_statement
+#line 476 "MainParser.gppg"
+                     { CurrentSemanticValue.statement = ValueStack[ValueStack.Depth-1].statement; }
+#line default
+        break;
       case 108: // switch_header -> /* empty */
-#line 478 "MainParser.gppg"
+#line 479 "MainParser.gppg"
                  { MiddleCodeGenerator.SwitchHeader(); }
 #line default
         break;
       case 109: // loop_header -> /* empty */
-#line 481 "MainParser.gppg"
+#line 482 "MainParser.gppg"
                  { MiddleCodeGenerator.LoopHeader(); }
 #line default
         break;
       case 110: // opened_statement -> IF, LEFT_PARENTHESIS, expression, RIGHT_PARENTHESIS, 
                 //                     statement
-#line 484 "MainParser.gppg"
+#line 485 "MainParser.gppg"
                                                                {
       CurrentSemanticValue.statement = MiddleCodeGenerator.IfElseStatement(ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].statement, new Statement());
     }
@@ -1490,7 +1491,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 111: // opened_statement -> IF, LEFT_PARENTHESIS, expression, RIGHT_PARENTHESIS, 
                 //                     closed_statement, ELSE, opened_statement
-#line 488 "MainParser.gppg"
+#line 489 "MainParser.gppg"
                           {
       CurrentSemanticValue.statement = MiddleCodeGenerator.IfElseStatement(ValueStack[ValueStack.Depth-5].expression, ValueStack[ValueStack.Depth-3].statement, ValueStack[ValueStack.Depth-1].statement);
     }
@@ -1498,14 +1499,14 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 112: // opened_statement -> SWITCH, switch_header, LEFT_PARENTHESIS, expression, 
                 //                     RIGHT_PARENTHESIS, opened_statement
-#line 492 "MainParser.gppg"
+#line 493 "MainParser.gppg"
                      {
       CurrentSemanticValue.statement = MiddleCodeGenerator.SwitchStatement(ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].statement);
     }
 #line default
         break;
       case 113: // opened_statement -> CASE, constant_integral_expression, COLON, opened_statement
-#line 495 "MainParser.gppg"
+#line 496 "MainParser.gppg"
                                                              {
       CurrentSemanticValue.statement = MiddleCodeGenerator.CaseStatement(ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].statement);
     }
@@ -1513,7 +1514,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 114: // opened_statement -> WHILE, loop_header, LEFT_PARENTHESIS, expression, 
                 //                     RIGHT_PARENTHESIS, opened_statement
-#line 499 "MainParser.gppg"
+#line 500 "MainParser.gppg"
                      {
       CurrentSemanticValue.statement = MiddleCodeGenerator.WhileStatement(ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].statement);
     }
@@ -1522,14 +1523,14 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
       case 115: // opened_statement -> FOR, loop_header, LEFT_PARENTHESIS, optional_expression, 
                 //                     SEMICOLON, optional_expression, SEMICOLON, 
                 //                     optional_expression, RIGHT_PARENTHESIS, opened_statement
-#line 504 "MainParser.gppg"
+#line 505 "MainParser.gppg"
                      {
       CurrentSemanticValue.statement = MiddleCodeGenerator.ForStatement(ValueStack[ValueStack.Depth-7].expression, ValueStack[ValueStack.Depth-5].expression, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].statement);
     }
 #line default
         break;
       case 116: // opened_statement -> NAME, COLON, opened_statement
-#line 507 "MainParser.gppg"
+#line 508 "MainParser.gppg"
                                 {
       CurrentSemanticValue.statement = MiddleCodeGenerator.LabelStatement(ValueStack[ValueStack.Depth-3].name, ValueStack[ValueStack.Depth-1].statement);
     }
@@ -1537,7 +1538,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 117: // closed_statement -> IF, LEFT_PARENTHESIS, expression, RIGHT_PARENTHESIS, 
                 //                     closed_statement, ELSE, closed_statement
-#line 513 "MainParser.gppg"
+#line 514 "MainParser.gppg"
                           {
       CurrentSemanticValue.statement = MiddleCodeGenerator.IfElseStatement(ValueStack[ValueStack.Depth-5].expression, ValueStack[ValueStack.Depth-3].statement, ValueStack[ValueStack.Depth-1].statement);
     }
@@ -1545,7 +1546,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 118: // closed_statement -> SWITCH, switch_header, LEFT_PARENTHESIS, expression, 
                 //                     RIGHT_PARENTHESIS, closed_statement
-#line 517 "MainParser.gppg"
+#line 518 "MainParser.gppg"
                      {
       CurrentSemanticValue.statement = MiddleCodeGenerator.SwitchStatement(ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].statement);
     }
@@ -1553,7 +1554,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 119: // closed_statement -> WHILE, loop_header, LEFT_PARENTHESIS, expression, 
                 //                     RIGHT_PARENTHESIS, closed_statement
-#line 521 "MainParser.gppg"
+#line 522 "MainParser.gppg"
                      {
       CurrentSemanticValue.statement = MiddleCodeGenerator.WhileStatement(ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].statement);
     }
@@ -1561,7 +1562,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 120: // closed_statement -> DO, loop_header, statement, WHILE, LEFT_PARENTHESIS, 
                 //                     expression, RIGHT_PARENTHESIS, SEMICOLON
-#line 525 "MainParser.gppg"
+#line 526 "MainParser.gppg"
               {
       CurrentSemanticValue.statement = MiddleCodeGenerator.DoStatement(ValueStack[ValueStack.Depth-6].statement, ValueStack[ValueStack.Depth-3].expression);
     }
@@ -1570,42 +1571,42 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
       case 121: // closed_statement -> FOR, loop_header, LEFT_PARENTHESIS, optional_expression, 
                 //                     SEMICOLON, optional_expression, SEMICOLON, 
                 //                     optional_expression, RIGHT_PARENTHESIS, closed_statement
-#line 530 "MainParser.gppg"
+#line 531 "MainParser.gppg"
                      {
       CurrentSemanticValue.statement = MiddleCodeGenerator.ForStatement(ValueStack[ValueStack.Depth-7].expression, ValueStack[ValueStack.Depth-5].expression, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].statement);
     }
 #line default
         break;
       case 122: // closed_statement -> CASE, constant_integral_expression, COLON, closed_statement
-#line 533 "MainParser.gppg"
+#line 534 "MainParser.gppg"
                                                              {
       CurrentSemanticValue.statement = MiddleCodeGenerator.CaseStatement(ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].statement);
     }
 #line default
         break;
       case 123: // closed_statement -> DEFAULT, COLON, closed_statement
-#line 536 "MainParser.gppg"
+#line 537 "MainParser.gppg"
                                    {
       CurrentSemanticValue.statement = MiddleCodeGenerator.DefaultStatement(ValueStack[ValueStack.Depth-1].statement);
     }
 #line default
         break;
       case 124: // closed_statement -> CONTINUE, SEMICOLON
-#line 539 "MainParser.gppg"
+#line 540 "MainParser.gppg"
                        {
       CurrentSemanticValue.statement = MiddleCodeGenerator.ContinueStatement();
     }
 #line default
         break;
       case 125: // closed_statement -> BREAK, SEMICOLON
-#line 542 "MainParser.gppg"
+#line 543 "MainParser.gppg"
                     {
       CurrentSemanticValue.statement = MiddleCodeGenerator.BreakStatement();
     }
 #line default
         break;
       case 126: // Anon@10 -> /* empty */
-#line 545 "MainParser.gppg"
+#line 546 "MainParser.gppg"
                {
       SymbolTable.CurrentTable =
         new SymbolTable(SymbolTable.CurrentTable, Scope.Block);
@@ -1614,7 +1615,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 127: // closed_statement -> LEFT_BLOCK, Anon@10, optional_declaration_list, 
                 //                     optional_statement_list, RIGHT_BLOCK
-#line 549 "MainParser.gppg"
+#line 550 "MainParser.gppg"
                                                                   {
       SymbolTable.CurrentTable =
         SymbolTable.CurrentTable.ParentTable;
@@ -1624,21 +1625,21 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 128: // closed_statement -> GOTO, NAME, SEMICOLON
-#line 555 "MainParser.gppg"
+#line 556 "MainParser.gppg"
                         {
       CurrentSemanticValue.statement = MiddleCodeGenerator.GotoStatement(ValueStack[ValueStack.Depth-2].name);
     }
 #line default
         break;
       case 129: // closed_statement -> RETURN, optional_expression, SEMICOLON
-#line 558 "MainParser.gppg"
+#line 559 "MainParser.gppg"
                                          {
       CurrentSemanticValue.statement = MiddleCodeGenerator.ReturnStatement(ValueStack[ValueStack.Depth-2].expression);
     }
 #line default
         break;
       case 130: // closed_statement -> optional_expression, SEMICOLON
-#line 561 "MainParser.gppg"
+#line 562 "MainParser.gppg"
                                   {
       CurrentSemanticValue.statement = MiddleCodeGenerator.ExpressionStatement(ValueStack[ValueStack.Depth-2].expression);
     }
@@ -1646,7 +1647,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 131: // closed_statement -> JUMP_REGISTER, LEFT_PARENTHESIS, REGISTER_NAME, 
                 //                     RIGHT_PARENTHESIS, SEMICOLON
-#line 567 "MainParser.gppg"
+#line 568 "MainParser.gppg"
                                                                              {
       CurrentSemanticValue.statement = MiddleCodeGenerator.JumpRegisterStatement(ValueStack[ValueStack.Depth-3].register);
     }
@@ -1654,45 +1655,45 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 132: // closed_statement -> INTERRUPT, LEFT_PARENTHESIS, constant_integral_expression, 
                 //                     RIGHT_PARENTHESIS, SEMICOLON
-#line 571 "MainParser.gppg"
+#line 572 "MainParser.gppg"
               {
       CurrentSemanticValue.statement = MiddleCodeGenerator.InterruptStatement(ValueStack[ValueStack.Depth-3].expression);
     }
 #line default
         break;
       case 133: // closed_statement -> SYSCALL, LEFT_PARENTHESIS, RIGHT_PARENTHESIS, SEMICOLON
-#line 574 "MainParser.gppg"
+#line 575 "MainParser.gppg"
                                                          {
       CurrentSemanticValue.statement = MiddleCodeGenerator.SyscallStatement();
     }
 #line default
         break;
       case 134: // optional_expression -> /* empty */
-#line 579 "MainParser.gppg"
+#line 580 "MainParser.gppg"
                 { CurrentSemanticValue.expression = null; }
 #line default
         break;
       case 135: // optional_expression -> expression
-#line 580 "MainParser.gppg"
+#line 581 "MainParser.gppg"
                 { CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;   }
 #line default
         break;
       case 136: // expression -> assignment_expression
-#line 583 "MainParser.gppg"
+#line 584 "MainParser.gppg"
                          {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
 #line default
         break;
       case 137: // expression -> expression, COMMA, assignment_expression
-#line 586 "MainParser.gppg"
+#line 587 "MainParser.gppg"
                                            {
       CurrentSemanticValue.expression = MiddleCodeGenerator.CommaExpression(ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 138: // assignment_expression -> condition_expression
-#line 591 "MainParser.gppg"
+#line 592 "MainParser.gppg"
                          {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
@@ -1700,69 +1701,69 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 139: // assignment_expression -> prefix_expression, assignment_operator, 
                 //                          assignment_expression
-#line 594 "MainParser.gppg"
+#line 595 "MainParser.gppg"
                                                                 {
       CurrentSemanticValue.expression = MiddleCodeGenerator.AssignmentExpression(ValueStack[ValueStack.Depth-2].middleOperator, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 140: // assignment_operator -> ASSIGN
-#line 599 "MainParser.gppg"
+#line 600 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.Assign;     }
 #line default
         break;
       case 141: // assignment_operator -> ADD_ASSIGN
-#line 600 "MainParser.gppg"
+#line 601 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.Add;        }
 #line default
         break;
       case 142: // assignment_operator -> SUBTRACT_ASSIGN
-#line 601 "MainParser.gppg"
+#line 602 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.Subtract;   }
 #line default
         break;
       case 143: // assignment_operator -> MULTIPLY_ASSIGN
-#line 602 "MainParser.gppg"
+#line 603 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.Multiply;   }
 #line default
         break;
       case 144: // assignment_operator -> DIVIDE_ASSIGN
-#line 603 "MainParser.gppg"
+#line 604 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.Divide;     }
 #line default
         break;
       case 145: // assignment_operator -> MODULO_ASSIGN
-#line 604 "MainParser.gppg"
+#line 605 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.Modulo;     }
 #line default
         break;
       case 146: // assignment_operator -> AND_ASSIGN
-#line 605 "MainParser.gppg"
+#line 606 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.BitwiseAnd; }
 #line default
         break;
       case 147: // assignment_operator -> OR_ASSIGN
-#line 606 "MainParser.gppg"
+#line 607 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.BitwiseOr;  }
 #line default
         break;
       case 148: // assignment_operator -> XOR_ASSIGN
-#line 607 "MainParser.gppg"
+#line 608 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.BitwiseXOr; }
 #line default
         break;
       case 149: // assignment_operator -> LEFT_SHIFT_ASSIGN
-#line 608 "MainParser.gppg"
+#line 609 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.ShiftLeft;  }
 #line default
         break;
       case 150: // assignment_operator -> RIGHT_SHIFT_ASSIGN
-#line 609 "MainParser.gppg"
+#line 610 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.ShiftRight; }
 #line default
         break;
       case 151: // condition_expression -> logical_or_expression
-#line 612 "MainParser.gppg"
+#line 613 "MainParser.gppg"
                           {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
@@ -1770,31 +1771,31 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 152: // condition_expression -> logical_or_expression, QUESTION_MARK, expression, COLON, 
                 //                         condition_expression
-#line 615 "MainParser.gppg"
+#line 616 "MainParser.gppg"
                                                                              {
       CurrentSemanticValue.expression = MiddleCodeGenerator.ConditionExpression(ValueStack[ValueStack.Depth-5].expression, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 153: // optional_constant_integral_expression -> /* empty */
-#line 620 "MainParser.gppg"
+#line 621 "MainParser.gppg"
                                  { CurrentSemanticValue.expression = null; }
 #line default
         break;
       case 154: // optional_constant_integral_expression -> constant_integral_expression
-#line 621 "MainParser.gppg"
+#line 622 "MainParser.gppg"
                                  { CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;   }
 #line default
         break;
       case 155: // constant_integral_expression -> condition_expression
-#line 624 "MainParser.gppg"
+#line 625 "MainParser.gppg"
                          {
       CurrentSemanticValue.expression = MiddleCodeGenerator.ConstantIntegralExpression(ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 156: // logical_or_expression -> logical_and_expression
-#line 629 "MainParser.gppg"
+#line 630 "MainParser.gppg"
                            {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
@@ -1802,14 +1803,14 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 157: // logical_or_expression -> logical_or_expression, LOGICAL_OR, 
                 //                          logical_and_expression
-#line 632 "MainParser.gppg"
+#line 633 "MainParser.gppg"
                                                             {
       CurrentSemanticValue.expression = MiddleCodeGenerator.LogicalExpression(MiddleOperator.LogicalOr, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 158: // logical_and_expression -> bitwise_or_expression
-#line 637 "MainParser.gppg"
+#line 638 "MainParser.gppg"
                           {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
@@ -1817,14 +1818,14 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 159: // logical_and_expression -> logical_and_expression, LOGICAL_AND, 
                 //                           bitwise_or_expression
-#line 640 "MainParser.gppg"
+#line 641 "MainParser.gppg"
                                                              {
       CurrentSemanticValue.expression = MiddleCodeGenerator.LogicalExpression(MiddleOperator.LogicalAnd, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 160: // bitwise_or_expression -> bitwise_xor_expression
-#line 645 "MainParser.gppg"
+#line 646 "MainParser.gppg"
                            {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
@@ -1832,7 +1833,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 161: // bitwise_or_expression -> bitwise_or_expression, BITWISE_OR, 
                 //                          bitwise_xor_expression
-#line 648 "MainParser.gppg"
+#line 649 "MainParser.gppg"
                                                             {
       CurrentSemanticValue.expression = MiddleCodeGenerator.ArithmeticExpression
            (MiddleOperator.BitwiseOr, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
@@ -1840,7 +1841,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 162: // bitwise_xor_expression -> bitwise_and_expression
-#line 654 "MainParser.gppg"
+#line 655 "MainParser.gppg"
                            {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
@@ -1848,7 +1849,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 163: // bitwise_xor_expression -> bitwise_xor_expression, BITWISE_XOR, 
                 //                           bitwise_and_expression
-#line 657 "MainParser.gppg"
+#line 658 "MainParser.gppg"
                                                               {
       CurrentSemanticValue.expression = MiddleCodeGenerator.ArithmeticExpression
            (MiddleOperator.BitwiseXOr, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
@@ -1856,7 +1857,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 164: // bitwise_and_expression -> equality_expression
-#line 663 "MainParser.gppg"
+#line 664 "MainParser.gppg"
                         {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
@@ -1864,7 +1865,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 165: // bitwise_and_expression -> bitwise_and_expression, AMPERSAND, 
                 //                           equality_expression
-#line 666 "MainParser.gppg"
+#line 667 "MainParser.gppg"
                                                          {
       CurrentSemanticValue.expression = MiddleCodeGenerator.ArithmeticExpression
            (MiddleOperator.BitwiseAnd, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
@@ -1872,7 +1873,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 166: // equality_expression -> relation_expression
-#line 672 "MainParser.gppg"
+#line 673 "MainParser.gppg"
                         {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
@@ -1880,106 +1881,106 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 167: // equality_expression -> equality_expression, equality_operator, 
                 //                        relation_expression
-#line 675 "MainParser.gppg"
+#line 676 "MainParser.gppg"
                                                               {
       CurrentSemanticValue.expression = MiddleCodeGenerator.RelationalExpression(ValueStack[ValueStack.Depth-2].middleOperator, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 168: // equality_operator -> EQUAL
-#line 680 "MainParser.gppg"
+#line 681 "MainParser.gppg"
               { CurrentSemanticValue.middleOperator = MiddleOperator.Equal;    }
 #line default
         break;
       case 169: // equality_operator -> NOT_EQUAL
-#line 681 "MainParser.gppg"
+#line 682 "MainParser.gppg"
               { CurrentSemanticValue.middleOperator = MiddleOperator.NotEqual; }
 #line default
         break;
       case 170: // relation_expression -> shift_expression
-#line 684 "MainParser.gppg"
+#line 685 "MainParser.gppg"
                      {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
 #line default
         break;
       case 171: // relation_expression -> relation_expression, relation_operator, shift_expression
-#line 687 "MainParser.gppg"
+#line 688 "MainParser.gppg"
                                                            {
       CurrentSemanticValue.expression = MiddleCodeGenerator.RelationalExpression (ValueStack[ValueStack.Depth-2].middleOperator, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 172: // relation_operator -> LESS_THAN
-#line 692 "MainParser.gppg"
+#line 693 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.LessThan;         }
 #line default
         break;
       case 173: // relation_operator -> LESS_THAN_EQUAL
-#line 693 "MainParser.gppg"
+#line 694 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.LessThanEqual;    }
 #line default
         break;
       case 174: // relation_operator -> GREATER_THAN
-#line 694 "MainParser.gppg"
+#line 695 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.GreaterThan;      }
 #line default
         break;
       case 175: // relation_operator -> GREATER_THAN_EQUAL
-#line 695 "MainParser.gppg"
+#line 696 "MainParser.gppg"
                        { CurrentSemanticValue.middleOperator = MiddleOperator.GreaterThanEqual; }
 #line default
         break;
       case 176: // shift_expression -> add_expression
-#line 698 "MainParser.gppg"
+#line 699 "MainParser.gppg"
                    {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
 #line default
         break;
       case 177: // shift_expression -> shift_expression, shift_operator, add_expression
-#line 701 "MainParser.gppg"
+#line 702 "MainParser.gppg"
                                                    {
       CurrentSemanticValue.expression = MiddleCodeGenerator.ArithmeticExpression(ValueStack[ValueStack.Depth-2].middleOperator, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 178: // shift_operator -> LEFT_SHIFT
-#line 706 "MainParser.gppg"
+#line 707 "MainParser.gppg"
                 { CurrentSemanticValue.middleOperator = MiddleOperator.ShiftLeft;  }
 #line default
         break;
       case 179: // shift_operator -> RIGHT_SHIFT
-#line 707 "MainParser.gppg"
+#line 708 "MainParser.gppg"
                 { CurrentSemanticValue.middleOperator = MiddleOperator.ShiftRight; }
 #line default
         break;
       case 180: // add_expression -> multiply_expression
-#line 710 "MainParser.gppg"
+#line 711 "MainParser.gppg"
                         {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
 #line default
         break;
       case 181: // add_expression -> add_expression, additional_operator, multiply_expression
-#line 713 "MainParser.gppg"
+#line 714 "MainParser.gppg"
                                                            {
       CurrentSemanticValue.expression = MiddleCodeGenerator.ArithmeticExpression(ValueStack[ValueStack.Depth-2].middleOperator, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 182: // additional_operator -> PLUS
-#line 718 "MainParser.gppg"
+#line 719 "MainParser.gppg"
           { CurrentSemanticValue.middleOperator = MiddleOperator.Add;        }
 #line default
         break;
       case 183: // additional_operator -> MINUS
-#line 719 "MainParser.gppg"
+#line 720 "MainParser.gppg"
           { CurrentSemanticValue.middleOperator = MiddleOperator.Subtract;   }
 #line default
         break;
       case 184: // multiply_expression -> type_cast_expression
-#line 722 "MainParser.gppg"
+#line 723 "MainParser.gppg"
                          {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
@@ -1987,29 +1988,29 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 185: // multiply_expression -> multiply_expression, multiply_operator, 
                 //                        type_cast_expression
-#line 725 "MainParser.gppg"
+#line 726 "MainParser.gppg"
                                                                {
       CurrentSemanticValue.expression = MiddleCodeGenerator.ArithmeticExpression(ValueStack[ValueStack.Depth-2].middleOperator, ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 186: // multiply_operator -> ASTERRISK
-#line 730 "MainParser.gppg"
+#line 731 "MainParser.gppg"
               { CurrentSemanticValue.middleOperator = MiddleOperator.Multiply; }
 #line default
         break;
       case 187: // multiply_operator -> DIVIDE
-#line 731 "MainParser.gppg"
+#line 732 "MainParser.gppg"
               { CurrentSemanticValue.middleOperator = MiddleOperator.Divide;   }
 #line default
         break;
       case 188: // multiply_operator -> MODULO
-#line 732 "MainParser.gppg"
+#line 733 "MainParser.gppg"
               { CurrentSemanticValue.middleOperator = MiddleOperator.Modulo;   }
 #line default
         break;
       case 189: // type_cast_expression -> prefix_expression
-#line 735 "MainParser.gppg"
+#line 736 "MainParser.gppg"
                       {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression;
     }
@@ -2017,14 +2018,14 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 190: // type_cast_expression -> LEFT_PARENTHESIS, type_name, RIGHT_PARENTHESIS, 
                 //                         type_cast_expression
-#line 738 "MainParser.gppg"
+#line 739 "MainParser.gppg"
                                                                       {
       CurrentSemanticValue.expression = MiddleCodeGenerator.CastExpression(ValueStack[ValueStack.Depth-3].type, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 191: // type_name -> declaration_specifier_list
-#line 747 "MainParser.gppg"
+#line 748 "MainParser.gppg"
                                {
       CurrentSemanticValue.type = MiddleCodeGenerator.
            TypeName(Specifier.SpecifierList(ValueStack[ValueStack.Depth-1].object_list), null);
@@ -2032,14 +2033,14 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 192: // Anon@11 -> /* empty */
-#line 751 "MainParser.gppg"
+#line 752 "MainParser.gppg"
                                {
       SpecifierStack.Push(Specifier.SpecifierList(ValueStack[ValueStack.Depth-1].object_list));
     }
 #line default
         break;
       case 193: // type_name -> declaration_specifier_list, Anon@11, abstract_declarator
-#line 754 "MainParser.gppg"
+#line 755 "MainParser.gppg"
                         {
       CurrentSemanticValue.type = MiddleCodeGenerator.
            TypeName(SpecifierStack.Pop(), ValueStack[ValueStack.Depth-1].declarator);
@@ -2047,123 +2048,123 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line default
         break;
       case 194: // prefix_expression -> postfix_expression
-#line 760 "MainParser.gppg"
+#line 761 "MainParser.gppg"
                        {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression; 
     }
 #line default
         break;
       case 195: // prefix_expression -> prefix_unary_operator, type_cast_expression
-#line 763 "MainParser.gppg"
+#line 764 "MainParser.gppg"
                                                {
       CurrentSemanticValue.expression = MiddleCodeGenerator.UnaryExpression(ValueStack[ValueStack.Depth-2].middleOperator, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 196: // prefix_expression -> LOGICAL_NOT, type_cast_expression
-#line 766 "MainParser.gppg"
+#line 767 "MainParser.gppg"
                                      {
       CurrentSemanticValue.expression = MiddleCodeGenerator.LogicalNotExpression(ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 197: // prefix_expression -> SIZEOF, prefix_expression
-#line 769 "MainParser.gppg"
+#line 770 "MainParser.gppg"
                              {
       CurrentSemanticValue.expression = MiddleCodeGenerator.SizeOfExpression(ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 198: // prefix_expression -> SIZEOF, LEFT_PARENTHESIS, type_name, RIGHT_PARENTHESIS
-#line 772 "MainParser.gppg"
+#line 773 "MainParser.gppg"
                                                         {
       CurrentSemanticValue.expression = MiddleCodeGenerator.SizeOfType(ValueStack[ValueStack.Depth-2].type);
     }
 #line default
         break;
       case 199: // prefix_expression -> AMPERSAND, type_cast_expression
-#line 775 "MainParser.gppg"
+#line 776 "MainParser.gppg"
                                    {
       CurrentSemanticValue.expression = MiddleCodeGenerator.AddressExpression(ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 200: // prefix_expression -> ASTERRISK, type_cast_expression
-#line 778 "MainParser.gppg"
+#line 779 "MainParser.gppg"
                                    {
       CurrentSemanticValue.expression = MiddleCodeGenerator.DereferenceExpression(ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 201: // prefix_expression -> increment_operator, prefix_expression
-#line 781 "MainParser.gppg"
+#line 782 "MainParser.gppg"
                                          {
       CurrentSemanticValue.expression = MiddleCodeGenerator.PrefixIncrementExpression(ValueStack[ValueStack.Depth-2].middleOperator, ValueStack[ValueStack.Depth-1].expression);
     }
 #line default
         break;
       case 202: // prefix_unary_operator -> PLUS
-#line 786 "MainParser.gppg"
+#line 787 "MainParser.gppg"
                 { CurrentSemanticValue.middleOperator = MiddleOperator.Plus;       }
 #line default
         break;
       case 203: // prefix_unary_operator -> MINUS
-#line 787 "MainParser.gppg"
+#line 788 "MainParser.gppg"
                 { CurrentSemanticValue.middleOperator = MiddleOperator.Minus;      }
 #line default
         break;
       case 204: // prefix_unary_operator -> BITWISE_NOT
-#line 788 "MainParser.gppg"
+#line 789 "MainParser.gppg"
                 { CurrentSemanticValue.middleOperator = MiddleOperator.BitwiseNot; }
 #line default
         break;
       case 205: // increment_operator -> INCREMENT
-#line 791 "MainParser.gppg"
+#line 792 "MainParser.gppg"
               { CurrentSemanticValue.middleOperator = MiddleOperator.Add; }
 #line default
         break;
       case 206: // increment_operator -> DECREMENT
-#line 792 "MainParser.gppg"
+#line 793 "MainParser.gppg"
               { CurrentSemanticValue.middleOperator = MiddleOperator.Subtract; }
 #line default
         break;
       case 207: // postfix_expression -> primary_expression
-#line 795 "MainParser.gppg"
+#line 796 "MainParser.gppg"
                        {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-1].expression; 
     }
 #line default
         break;
       case 208: // postfix_expression -> postfix_expression, increment_operator
-#line 798 "MainParser.gppg"
+#line 799 "MainParser.gppg"
                                           {
       CurrentSemanticValue.expression = MiddleCodeGenerator.PostfixIncrementExpression(ValueStack[ValueStack.Depth-1].middleOperator, ValueStack[ValueStack.Depth-2].expression);
     }
 #line default
         break;
       case 209: // postfix_expression -> postfix_expression, DOT, NAME
-#line 801 "MainParser.gppg"
+#line 802 "MainParser.gppg"
                                 {
       CurrentSemanticValue.expression = MiddleCodeGenerator.DotExpression(ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].name);
     }
 #line default
         break;
       case 210: // postfix_expression -> postfix_expression, ARROW, NAME
-#line 804 "MainParser.gppg"
+#line 805 "MainParser.gppg"
                                   {
       CurrentSemanticValue.expression = MiddleCodeGenerator.ArrowExpression(ValueStack[ValueStack.Depth-3].expression, ValueStack[ValueStack.Depth-1].name);
     }
 #line default
         break;
       case 211: // postfix_expression -> postfix_expression, LEFT_SQUARE, expression, RIGHT_SQUARE
-#line 807 "MainParser.gppg"
+#line 808 "MainParser.gppg"
                                                            {
       CurrentSemanticValue.expression = MiddleCodeGenerator.IndexExpression(ValueStack[ValueStack.Depth-4].expression, ValueStack[ValueStack.Depth-2].expression);
     }
 #line default
         break;
       case 212: // Anon@12 -> /* empty */
-#line 810 "MainParser.gppg"
+#line 811 "MainParser.gppg"
                        {
       MiddleCodeGenerator.CallHeader(ValueStack[ValueStack.Depth-1].expression);
     }
@@ -2171,76 +2172,76 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 213: // postfix_expression -> postfix_expression, Anon@12, LEFT_PARENTHESIS, 
                 //                       optional_argument_expression_list, RIGHT_PARENTHESIS
-#line 813 "MainParser.gppg"
+#line 814 "MainParser.gppg"
                                                                          {
-      CurrentSemanticValue.expression = MiddleCodeGenerator.CallExpression(ValueStack[ValueStack.Depth-5].expression, ValueStack[ValueStack.Depth-2].expression_list);
+      CurrentSemanticValue.expression = MiddleCodeGenerator.CallExpression(ValueStack[ValueStack.Depth-5].expression, ValueStack[ValueStack.Depth-2].argument_pair_list);
     }
 #line default
         break;
       case 214: // optional_argument_expression_list -> /* empty */
-#line 818 "MainParser.gppg"
-                             { CurrentSemanticValue.expression_list = new List<Expression>(); }
+#line 819 "MainParser.gppg"
+                             { CurrentSemanticValue.argument_pair_list = new List<Pair<Expression,int>>(); }
 #line default
         break;
       case 215: // optional_argument_expression_list -> argument_expression_list
-#line 819 "MainParser.gppg"
-                             { CurrentSemanticValue.expression_list = ValueStack[ValueStack.Depth-1].expression_list;                     }
+#line 820 "MainParser.gppg"
+                             { CurrentSemanticValue.argument_pair_list = ValueStack[ValueStack.Depth-1].argument_pair_list;                     }
 #line default
         break;
       case 216: // argument_expression_list -> assignment_expression
-#line 822 "MainParser.gppg"
+#line 823 "MainParser.gppg"
                           {
-      CurrentSemanticValue.expression_list = new List<Expression>();
-      CurrentSemanticValue.expression_list.Add(MiddleCodeGenerator.ArgumentExpression(0, ValueStack[ValueStack.Depth-1].expression));
+      CurrentSemanticValue.argument_pair_list = new List<Pair<Expression,int>>();
+      CurrentSemanticValue.argument_pair_list.Add(MiddleCodeGenerator.ArgumentExpression(0, ValueStack[ValueStack.Depth-1].expression));
     }
 #line default
         break;
       case 217: // argument_expression_list -> argument_expression_list, COMMA, 
                 //                             assignment_expression
-#line 826 "MainParser.gppg"
+#line 827 "MainParser.gppg"
                                                          {
-      ValueStack[ValueStack.Depth-3].expression_list.Add(MiddleCodeGenerator.ArgumentExpression(ValueStack[ValueStack.Depth-3].expression_list.Count, ValueStack[ValueStack.Depth-1].expression));
-      CurrentSemanticValue.expression_list = ValueStack[ValueStack.Depth-3].expression_list;
+      ValueStack[ValueStack.Depth-3].argument_pair_list.Add(MiddleCodeGenerator.ArgumentExpression(ValueStack[ValueStack.Depth-3].argument_pair_list.Count, ValueStack[ValueStack.Depth-1].expression));
+      CurrentSemanticValue.argument_pair_list = ValueStack[ValueStack.Depth-3].argument_pair_list;
     }
 #line default
         break;
       case 218: // primary_expression -> LEFT_PARENTHESIS, expression, RIGHT_PARENTHESIS
-#line 832 "MainParser.gppg"
+#line 833 "MainParser.gppg"
                                                   {
       CurrentSemanticValue.expression = ValueStack[ValueStack.Depth-2].expression; 
     }
 #line default
         break;
       case 219: // primary_expression -> VALUE
-#line 835 "MainParser.gppg"
+#line 836 "MainParser.gppg"
           {
       CurrentSemanticValue.expression = MiddleCodeGenerator.ValueExpression(ValueStack[ValueStack.Depth-1].symbol);
     }
 #line default
         break;
       case 220: // primary_expression -> NAME
-#line 838 "MainParser.gppg"
+#line 839 "MainParser.gppg"
          {
       CurrentSemanticValue.expression = MiddleCodeGenerator.NameExpression(ValueStack[ValueStack.Depth-1].name);
     }
 #line default
         break;
       case 221: // primary_expression -> REGISTER_NAME
-#line 841 "MainParser.gppg"
+#line 842 "MainParser.gppg"
                   {
       CurrentSemanticValue.expression = MiddleCodeGenerator.RegisterExpression(ValueStack[ValueStack.Depth-1].register);
     }
 #line default
         break;
       case 222: // primary_expression -> CARRY_FLAG
-#line 844 "MainParser.gppg"
+#line 845 "MainParser.gppg"
                {
       CurrentSemanticValue.expression = MiddleCodeGenerator.CarryFlagExpression();
     }
 #line default
         break;
       case 223: // primary_expression -> STACK_TOP
-#line 847 "MainParser.gppg"
+#line 848 "MainParser.gppg"
               {
       CurrentSemanticValue.expression = MiddleCodeGenerator.StackTopExpression();
     }
@@ -2260,7 +2261,7 @@ public partial class Parser: ShiftReduceParser<ValueType, LexLocation>
         return CharToString((char)terminal);
   }
 
-#line 850 "MainParser.gppg"
+#line 851 "MainParser.gppg"
  #line default
 }
 }
