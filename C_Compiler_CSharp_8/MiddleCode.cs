@@ -13,7 +13,7 @@ namespace CCompiler {
       get { return m_index; }
       set { m_index = value; }
     }
-      
+
     public MiddleCode(MiddleOperator middleOp, object operand0 = null,
                       object operand1 = null, object operand2 = null) {
       m_middleOperator = middleOp;
@@ -22,16 +22,16 @@ namespace CCompiler {
       m_operandArray[2] = operand2;
 
       if (m_middleOperator == MiddleOperator.InitializerZero) {
-         int size = (int) operand0;
+        int size = (int)operand0;
       }
 
-      /*string s = ToString();
-      if ((s != null) && s.Contains("temporary28")) {
-        int i = 1;
+      if ((SymbolTable.CurrentFunction != null) &&
+          SymbolTable.CurrentFunction.Name.Equals("math_test")) {
+        string s = ToString();
+        if ((s != null) && s.Contains("PushFloat floating8$0#")) {
+          int i = 1;
+        }
       }
-      if ((s != null) && s.Contains("temporary29")) {
-        int i = 1;
-      }*/
     }
 
     public MiddleOperator Operator {
@@ -152,7 +152,7 @@ namespace CCompiler {
             
       }
       else*/ {
-        return ((m_index != -1) ? (m_index.ToString() + " ") : "") +
+        return // ((m_index != -1) ? (m_index.ToString() + " ") : "") +
                m_middleOperator + ToString(m_operandArray[0]) +
                ToString(m_operandArray[1]) + ToString(m_operandArray[2]);
       }

@@ -43,6 +43,7 @@
   public MiddleOperator middleOperator;
   public Expression expression;
   public List<Expression> expression_list;
+  public List<Pair<Expression,int>> argument_pair_list;
   public Statement statement;
   public Pair<List<Symbol>,Boolean> parameter_pair;
   public List<MiddleCode> middle_code_list;
@@ -109,8 +110,8 @@
 %type <statement> optional_statement_list statement
                   closed_statement opened_statement
 
-%type <expression_list> optional_argument_expression_list
-                        argument_expression_list
+%type <argument_pair_list> optional_argument_expression_list
+                           argument_expression_list
 
 %start translation_unit
 
@@ -815,17 +816,17 @@ postfix_expression:
     };
 
 optional_argument_expression_list:
-    /* Empty */              { $$ = new List<Expression>(); }
+    /* Empty */              { $$ = new List<Pair<Expression,int>>(); }
   | argument_expression_list { $$ = $1;                     };
 
 argument_expression_list:
     assignment_expression {
-      $$ = new List<Expression>();
+      $$ = new List<Pair<Expression,int>>();
       $$.Add(MiddleCodeGenerator.ArgumentExpression(0, $1));
     }
   | argument_expression_list COMMA assignment_expression {
+      $1.Add(MiddleCodeGenerator.ArgumentExpression($1.Count, $3));
       $$ = $1;
-      $$.Add(MiddleCodeGenerator.ArgumentExpression($1.Count, $3));
     };
 
 primary_expression:

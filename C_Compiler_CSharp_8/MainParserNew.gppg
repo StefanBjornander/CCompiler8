@@ -820,12 +820,14 @@ optional_argument_expression_list:
 
 argument_expression_list:
     assignment_expression {
+      MiddleCodeGenerator.ArgumentExpression(0, $1);
       $$ = new List<Expression>();
-      $$.Add(MiddleCodeGenerator.ArgumentExpression(0, $1));
+      $$.Add($1);
     }
   | argument_expression_list COMMA assignment_expression {
+      MiddleCodeGenerator.ArgumentExpression($1.Count, $3);
+      $1.Add($3);
       $$ = $1;
-      $$.Add(MiddleCodeGenerator.ArgumentExpression($1.Count, $3));
     };
 
 primary_expression:

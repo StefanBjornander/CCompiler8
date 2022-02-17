@@ -1457,7 +1457,7 @@ namespace CCompiler {
 
     // ---------------------------------------------------------------------------------------------------------------------
 
-    public static Stack<Type> m_functionStack = new Stack<Type>();
+    public static Stack<List<Type>> m_typeListStack = new Stack<List<Type>>();
     public static Stack<int> m_parameterOffsetStack = new Stack<int>(),
                              m_parameterExtraStack = new Stack<int>();
     public static int m_totalOffset = 0;
@@ -1468,7 +1468,7 @@ namespace CCompiler {
                    type.IsPointer() && type.PointerType.IsFunction(),
                    expression.Symbol, Message.Not_a_function);
       Type functionType = type.IsFunction() ? type : type.PointerType;
-      m_functionStack.Push(functionType);
+      m_typeListStack.Push(functionType.TypeList);
       m_parameterOffsetStack.Push(0);
       m_parameterExtraStack.Push(0);
 
@@ -1477,38 +1477,58 @@ namespace CCompiler {
     }
 
     public static Expression CallExpression(Expression functionExpression,
-                                            List<Expression> argumentList){
+                                            List<Pair<Expression,int>> argumentPairList){
       Type functionType = functionExpression.Symbol.Type.IsPointer() ?
                           functionExpression.Symbol.Type.PointerType :
                           functionExpression.Symbol.Type;
 
       List<Type> typeList = functionType.TypeList;
       Error.Check((typeList == null) ||
-                   (argumentList.Count >= typeList.Count),
+                   (argumentPairList.Count >= typeList.Count),
                    functionExpression,
                    Message.Too_few_actual_parameters_in_function_call);
       Error.Check(functionType.IsVariadic() || (typeList == null) ||
-                   (argumentList.Count == typeList.Count),
+                   (argumentPairList.Count == typeList.Count),
                    functionExpression,
                    Message.Too_many_parameters_in_function_call);
     
       List<MiddleCode> longList = new List<MiddleCode>();
       longList.AddRange(functionExpression.LongList);
 
-      m_functionStack.Pop();
+      m_typeListStack.Pop();
       m_totalOffset -= m_parameterOffsetStack.Pop();
       int extraSize = m_parameterExtraStack.Pop();
 
-      foreach (Expression argumentExpression in argumentList) {
+      int totalOffset = 0;
+      foreach (int currentOffset in m_parameterOffsetStack) {
+        if (currentOffset > 0) {
+          totalOffset += (SymbolTable.FunctionHeaderSize + currentOffset);
+        }
+      }
+
+      foreach (Pair<Expression,int> pair in argumentPairList) {
+        Expression argumentExpression = pair.First;
+        int argumentOffset = pair.Second + SymbolTable.FunctionHeaderSize;
         longList.AddRange(argumentExpression.LongList);
+        Type argumentType = argumentExpression.Symbol.Type;
+
+        if (argumentType.IsStructOrUnion()) {
+          AddMiddleCode(longList, MiddleOperator.ParameterInitSize,
+                        SymbolTable.CurrentTable.CurrentOffset + totalOffset +
+                        argumentOffset, argumentType, argumentExpression.Symbol);
+        }
+
+        AddMiddleCode(longList, MiddleOperator.Parameter,
+                      SymbolTable.CurrentTable.CurrentOffset + totalOffset +
+                      argumentOffset, argumentType, argumentExpression.Symbol);
       }
 
       Symbol functionSymbol = functionExpression.Symbol;
       AddMiddleCode(longList, MiddleOperator.Call,
-                    SymbolTable.CurrentTable.CurrentOffset + m_totalOffset,
+                    SymbolTable.CurrentTable.CurrentOffset + totalOffset,
                     functionSymbol, extraSize);
       AddMiddleCode(longList, MiddleOperator.PostCall,
-                    SymbolTable.CurrentTable.CurrentOffset + m_totalOffset);
+                    SymbolTable.CurrentTable.CurrentOffset + totalOffset);
     
       Type returnType = functionType.ReturnType;
       Symbol returnSymbol = new Symbol(returnType);
@@ -1534,9 +1554,9 @@ namespace CCompiler {
       return (new Expression(returnSymbol, shortList, longList));
     }
 
-    public static Expression ArgumentExpression(int index,
+    public static Pair<Expression, int> ArgumentExpression(int index,
                                                 Expression expression) {
-      List<Type> typeList = m_functionStack.Peek().TypeList;
+      List<Type> typeList = m_typeListStack.Peek();
       int currentOffset = m_parameterOffsetStack.Pop(),
           extraSize = m_parameterExtraStack.Pop();
 
@@ -1548,27 +1568,22 @@ namespace CCompiler {
         extraSize += ParameterTypeSize(expression.Symbol.Type);
       }
 
-      if (index == 0) {
-        currentOffset = SymbolTable.FunctionHeaderSize;
+      int argumentSize = ParameterTypeSize(expression.Symbol.Type);
+
+      if (currentOffset == 0) {
+        //currentOffset += SymbolTable.FunctionHeaderSize;
         m_totalOffset += SymbolTable.FunctionHeaderSize;
       }
 
-      Type argumentType = expression.Symbol.Type;
-      if (argumentType.IsStructOrUnion()) {
-        AddMiddleCode(expression.LongList, MiddleOperator.ParameterInitSize,
-                      SymbolTable.CurrentTable.CurrentOffset + m_totalOffset,
-                      argumentType, expression.Symbol);
-      }
-
-      AddMiddleCode(expression.LongList, MiddleOperator.Parameter,
-                    SymbolTable.CurrentTable.CurrentOffset + m_totalOffset,
-                    argumentType, expression.Symbol);
-
-      int argumentSize = ParameterTypeSize(expression.Symbol.Type);
       m_parameterOffsetStack.Push(currentOffset + argumentSize);
-      m_parameterExtraStack.Push(extraSize);
       m_totalOffset += argumentSize;
-      return expression;
+
+      m_parameterExtraStack.Push(extraSize);
+
+      Expression argumentExpression =
+        new Expression(expression.Symbol, expression.LongList,
+                       expression.LongList);
+      return (new Pair<Expression,int>(argumentExpression, currentOffset));
     }
 
     // f(x, g(y))
