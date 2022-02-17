@@ -1495,6 +1495,7 @@ namespace CCompiler {
 
       m_totalOffset -= m_parameterOffsetStack.Pop();
       int extraSize = m_parameterExtraStack.Pop();
+      m_functionTypeStack.Pop();
 
       foreach (Expression argumentExpression in argumentList) {
         longList.AddRange(argumentExpression.LongList);
