@@ -1431,7 +1431,7 @@ namespace CCompiler {
 
     // i++ <=> i += 1
     // i-- <=> i -= 1
-    public static Expression PostfixIncrementExpression
+      public static Expression PostfixIncrementExpression
                              (MiddleOperator middleOp, Expression expression){
       List<MiddleCode> shortList = PrefixIncrementExpression(middleOp, expression).ShortList,
                        longList = new List<MiddleCode>();
@@ -1457,7 +1457,7 @@ namespace CCompiler {
 
     // ---------------------------------------------------------------------------------------------------------------------
 
-    public static Stack<Type> m_functionStack = new Stack<Type>();
+    public static Stack<Type> m_functionTypeStack = new Stack<Type>();
     public static Stack<int> m_parameterOffsetStack = new Stack<int>(),
                              m_parameterExtraStack = new Stack<int>();
     public static int m_totalOffset = 0;
@@ -1467,11 +1467,9 @@ namespace CCompiler {
       Error.Check(type.IsFunction() ||
                    type.IsPointer() && type.PointerType.IsFunction(),
                    expression.Symbol, Message.Not_a_function);
-      Type functionType = type.IsFunction() ? type : type.PointerType;
-      m_functionStack.Push(functionType);
+      m_functionTypeStack.Push(type.IsFunction() ? type : type.PointerType);
       m_parameterOffsetStack.Push(0);
       m_parameterExtraStack.Push(0);
-
       AddMiddleCode(expression.LongList, MiddleOperator.PreCall,
                     SymbolTable.CurrentTable.CurrentOffset);
     }
@@ -1495,7 +1493,6 @@ namespace CCompiler {
       List<MiddleCode> longList = new List<MiddleCode>();
       longList.AddRange(functionExpression.LongList);
 
-      m_functionStack.Pop();
       m_totalOffset -= m_parameterOffsetStack.Pop();
       int extraSize = m_parameterExtraStack.Pop();
 
@@ -1536,7 +1533,7 @@ namespace CCompiler {
 
     public static Expression ArgumentExpression(int index,
                                                 Expression expression) {
-      List<Type> typeList = m_functionStack.Peek().TypeList;
+      List<Type> typeList = m_functionTypeStack.Peek().TypeList;
       int currentOffset = m_parameterOffsetStack.Pop(),
           extraSize = m_parameterExtraStack.Pop();
 

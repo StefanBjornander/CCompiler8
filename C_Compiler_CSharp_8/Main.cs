@@ -298,3 +298,21 @@ namespace CCompiler {
     }
   }
 }
+
+/*
+C#
+•	global using
+•	dynamic object generics
+•	M decimal
+•	Target typed new
+•	Default value
+•	Named parameters
+•	$"{FirstName} {LastName}"
+•	Assert
+•	Tuples
+•	In out parameter
+•	Named parameters
+•	Switch
+•	Records
+•	Get; init
+*/
