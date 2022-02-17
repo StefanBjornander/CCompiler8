@@ -1431,7 +1431,7 @@ namespace CCompiler {
 
     // i++ <=> i += 1
     // i-- <=> i -= 1
-      public static Expression PostfixIncrementExpression
+    public static Expression PostfixIncrementExpression
                              (MiddleOperator middleOp, Expression expression){
       List<MiddleCode> shortList = PrefixIncrementExpression(middleOp, expression).ShortList,
                        longList = new List<MiddleCode>();
