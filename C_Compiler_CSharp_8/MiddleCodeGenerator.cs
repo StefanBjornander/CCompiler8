@@ -15,6 +15,14 @@ namespace CCompiler {
       return middleCode;
     }
 
+    public static MiddleCode InsertMiddleCode(int index, List<MiddleCode> codeList,
+                               MiddleOperator op, object operand0 = null,
+                               object operand1 = null, object operand2 = null) {
+      MiddleCode middleCode = new MiddleCode(op, operand0, operand1, operand2);
+      codeList.Insert(index, middleCode);
+      return middleCode;
+    }
+
     public static void Backpatch(ISet<MiddleCode> sourceSet,
                                  List<MiddleCode> list) {
       Backpatch(sourceSet, GetFirst(list));
@@ -1433,26 +1441,21 @@ namespace CCompiler {
     // i-- <=> i -= 1
     public static Expression PostfixIncrementExpression
                              (MiddleOperator middleOp, Expression expression){
-      List<MiddleCode> shortList = PrefixIncrementExpression(middleOp, expression).ShortList,
-                       longList = new List<MiddleCode>();
-
-      Symbol resultSymbol = new Symbol(expression.Symbol.Type);
-      Expression resultExpression = new Expression(resultSymbol, longList, longList);
-
       if (expression.Symbol.Type.IsFloating()) {
-        longList.AddRange(expression.LongList);
-        AddMiddleCode(longList, MiddleOperator.PushFloat, expression.Symbol);
-        AddMiddleCode(longList, MiddleOperator.PushOne);
-        Symbol oneSymbol = new Symbol(expression.Symbol.Type, (decimal) 1);
-        AddMiddleCode(longList, middleOp, expression.Symbol, expression.Symbol, oneSymbol);
-        AddMiddleCode(longList, MiddleOperator.PopFloat, expression.Symbol);
+        Expression prefixExpression =
+          PrefixIncrementExpression(middleOp, expression);
+        InsertMiddleCode(0, prefixExpression.LongList, MiddleOperator.PushFloat, expression.Symbol);
+        AddMiddleCode(prefixExpression.LongList, MiddleOperator.PopEmpty);
+        return prefixExpression;
       }
       else {
+        List<MiddleCode> longList = new List<MiddleCode>();
+        Symbol resultSymbol = new Symbol(expression.Symbol.Type);
+        Expression resultExpression = new Expression(resultSymbol, longList, longList);
         longList.AddRange(Assignment(resultExpression, expression, false).ShortList);
         longList.AddRange(PrefixIncrementExpression(middleOp, expression).ShortList);
+        return resultExpression;
       }
-    
-      return resultExpression;
     }
 
     // ---------------------------------------------------------------------------------------------------------------------

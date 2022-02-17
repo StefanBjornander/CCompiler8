@@ -418,7 +418,7 @@ namespace CCompiler {
                  newSymbol = null;
 
           if ((leftSymbol.Value is BigInteger) && // t0 = 2 * 3
-              (rightSymbol.Value is BigInteger)) {
+              (rightSymbol != null) && (rightSymbol.Value is BigInteger)) {
             newSymbol =
               ConstantExpression.ArithmeticIntegral(thisCode.Operator,
                                                     leftSymbol, rightSymbol);
@@ -442,7 +442,7 @@ namespace CCompiler {
           // t0 = i - 0
           else if (((thisCode.Operator == MiddleOperator.Add) ||
                     (thisCode.Operator == MiddleOperator.Subtract)) &&
-                    (rightSymbol.Value is BigInteger) &&
+                    (rightSymbol != null) && (rightSymbol.Value is BigInteger) &&
                     (rightSymbol.Value.Equals(BigInteger.Zero))) {
             newSymbol = leftSymbol;
           }
@@ -460,7 +460,7 @@ namespace CCompiler {
           }
           // t0 = i * 0
           else if ((thisCode.Operator == MiddleOperator.Multiply) &&
-                    (rightSymbol.Value is BigInteger) &&
+                    (rightSymbol != null) && (rightSymbol.Value is BigInteger) &&
                     (rightSymbol.Value.Equals(BigInteger.Zero))) {
             newSymbol = new Symbol(resultSymbol.Type, BigInteger.Zero);
           }
@@ -475,7 +475,7 @@ namespace CCompiler {
           }
           // t0 = i * -1
           else if ((thisCode.Operator == MiddleOperator.Multiply) &&
-                    (rightSymbol.Value is BigInteger) &&
+                    (rightSymbol != null) && (rightSymbol.Value is BigInteger) &&
                     (rightSymbol.Value.Equals(BigInteger.MinusOne))) {
             thisCode.Operator = MiddleOperator.Minus;
             thisCode[1] = null;
@@ -487,7 +487,7 @@ namespace CCompiler {
           else if (((thisCode.Operator == MiddleOperator.Multiply) ||
                     (thisCode.Operator == MiddleOperator.Divide) ||
                     (thisCode.Operator == MiddleOperator.Modulo)) &&
-                    (rightSymbol.Value is BigInteger) &&
+                    (rightSymbol != null) && (rightSymbol.Value is BigInteger) &&
                     (rightSymbol.Value.Equals(BigInteger.One))) {
             newSymbol = leftSymbol;
           }

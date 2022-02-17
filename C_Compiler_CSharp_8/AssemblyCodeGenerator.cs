@@ -90,13 +90,13 @@ namespace CCompiler {
             SymbolTable.CurrentFunction.Name.Equals("printArgument") &&
             (middleIndex == 23)) {
           int i = 1;
-        }*/
+        }
 
         if ((SymbolTable.CurrentFunction != null) &&
             SymbolTable.CurrentFunction.Name.Equals("math_test") &&
             (middleIndex == 31)) {
           int i = 1;
-        }
+        }*/
 
         switch (middleCode.Operator) {
           case MiddleOperator.PreCall:

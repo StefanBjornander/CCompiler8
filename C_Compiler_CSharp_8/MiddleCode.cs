@@ -25,13 +25,13 @@ namespace CCompiler {
         int size = (int)operand0;
       }
 
-      if ((SymbolTable.CurrentFunction != null) &&
+      /*if ((SymbolTable.CurrentFunction != null) &&
           SymbolTable.CurrentFunction.Name.Equals("math_test")) {
         string s = ToString();
         if ((s != null) && s.Contains("PushFloat floating8$0#")) {
           int i = 1;
         }
-      }
+      }*/
     }
 
     public MiddleOperator Operator {
