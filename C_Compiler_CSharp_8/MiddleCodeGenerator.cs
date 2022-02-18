@@ -619,16 +619,20 @@ namespace CCompiler {
       m_continueSetStack.Push(new HashSet<MiddleCode>());
     }
 
-    public static Statement DoStatement(Statement innerStatement,
+    // do
+    //   statement
+    // while (expression);
+
+    public static Statement DoStatement(Statement statement,
                                         Expression expression) {
-      List<MiddleCode> codeList = innerStatement.CodeList;
-      Backpatch(innerStatement.NextSet, codeList);
+      List<MiddleCode> codeList = statement.CodeList;
+      Backpatch(statement.NextSet, expression.LongList);
 
       //AddMiddleCode(codeList, MiddleOperator.CheckTrackMapFloatStack);
       codeList.AddRange(expression.LongList);
 
-      Backpatch(expression.Symbol.TrueSet, codeList);
-      Backpatch(m_continueSetStack.Pop(), codeList);    
+      Backpatch(expression.Symbol.TrueSet, statement.CodeList);
+      Backpatch(m_continueSetStack.Pop(), statement.CodeList);
 
       ISet<MiddleCode> nextSet = new HashSet<MiddleCode>();
       nextSet.UnionWith(expression.Symbol.FalseSet);
@@ -1235,7 +1239,7 @@ namespace CCompiler {
       Error.Check(!symbol.IsRegister() && !symbol.Type.IsBitfield(),
                   expression,  Message.Not_addressable);
 
-      Expression staticExpression =
+      Expression staticExpression = 
         StaticExpression.Unary(MiddleOperator.Address, expression);
       if (staticExpression!= null) {
         return staticExpression ;
@@ -1307,13 +1311,13 @@ namespace CCompiler {
                                            string memberName) {
       Symbol parentSymbol = expression.Symbol;
       Error.Check(parentSymbol.Type.IsStructOrUnion(), expression,
-                   Message.Not_a_struct_or_union_in_dot_expression);
+                  Message.Not_a_struct_or_union_in_dot_expression);
       Error.Check(parentSymbol.Type.MemberMap != null, expression,
-                   Message.Member_access_of_uncomplete_struct_or_union);
+                  Message.Member_access_of_incomplete_struct_or_union);
       Symbol memberSymbol;
       Error.Check(parentSymbol.Type.MemberMap.
-                   TryGetValue(memberName, out memberSymbol),
-                   memberName, Message.Unknown_member_in_dot_expression);
+                  TryGetValue(memberName, out memberSymbol),
+                  memberName, Message.Unknown_member_in_dot_expression);
 
       string name = parentSymbol.Name + Symbol.SeparatorDot + memberSymbol.Name;
       Symbol resultSymbol = new Symbol(name, parentSymbol.ExternalLinkage,
@@ -1347,6 +1351,7 @@ namespace CCompiler {
 
     public static Expression CastExpression(Type type, Expression expression) {
       Expression constantExpression = ConstantExpression.ConstantCast(expression, type);
+
       if (constantExpression != null) {
         return constantExpression;
       }
