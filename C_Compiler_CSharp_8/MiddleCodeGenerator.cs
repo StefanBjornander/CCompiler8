@@ -416,7 +416,7 @@ namespace CCompiler {
     // ---------------------------------------------------------------------------------------------------------------------
 
     public static Declarator PointerDeclarator(List<Type> typeList,
-                                                Declarator declarator) {
+                                               Declarator declarator) {
       if (declarator == null) {
         declarator = new Declarator(null);
       }
@@ -474,7 +474,7 @@ namespace CCompiler {
                       parameterList[0].Name,
                       Message.A_void_parameter_cannot_be_named);
         Error.Check(!variadic, "...", Message.
-                      An_variadic_function_cannot_have_a_void_parameter);
+                    An_variadic_function_cannot_have_a_void_parameter);
         parameterList.Clear();
       }
       else {
@@ -488,7 +488,7 @@ namespace CCompiler {
     }
 
     public static Symbol Parameter(Specifier specifier,
-                                    Declarator declarator) {
+                                   Declarator declarator) {
       string name;
       Type type;
 
@@ -516,32 +516,6 @@ namespace CCompiler {
 
     // ---------------------------------------------------------------------------------------------------------------------
 
-    /*
-      * if (x) {
-      *   y();
-      * }
-      * else {
-      * }
-      * */
-
-    /*public static Statement IfStatement(Expression expression,
-                                        Statement innerStatement) {
-      expression = TypeCast.ToLogical(expression);
-      List<MiddleCode> longList = expression.LongList;
-//      AddMiddleCode(codeList, MiddleOperator.CheckTrackMapFloatStack);
-
-      Backpatch(expression.Symbol.TrueSet, innerStatement.CodeList);    
-      longList.AddRange(innerStatement.CodeList);
-      MiddleCode nextCode = AddMiddleCode(longList, MiddleOperator.Jump); // XXX
-      
-      ISet<MiddleCode> nextSet = new HashSet<MiddleCode>();
-      nextSet.UnionWith(innerStatement.NextSet);
-      nextSet.UnionWith(expression.Symbol.FalseSet);
-      nextSet.Add(nextCode);
-    
-      return (new Statement(longList, nextSet));
-    }*/
-
     public static Statement IfElseStatement(Expression testExpression,
                                             Statement trueStatement,
                                             Statement falseStatement) {
@@ -558,30 +532,6 @@ namespace CCompiler {
       Expression conditionExpression =
         ConditionExpression(testExpression, trueExpression, falseExpression);
       return (new Statement(conditionExpression.ShortList, nextSet));
-    }
-
-    public static Statement IfElseStatementX(Expression testExpression,
-                                            Statement trueStatement,
-                                            Statement falseStatement) {
-      testExpression = TypeCast.ToLogical(testExpression);
-      List<MiddleCode> longList = testExpression.LongList;
-//      AddMiddleCode(codeList, MiddleOperator.CheckTrackMapFloatStack);
-
-      Backpatch(testExpression.Symbol.TrueSet, trueStatement.CodeList);
-      Backpatch(testExpression.Symbol.FalseSet, falseStatement.CodeList);
-
-      longList.AddRange(trueStatement.CodeList);
-      MiddleCode jumpTrue = AddMiddleCode(longList, MiddleOperator.Jump);
-      longList.AddRange(falseStatement.CodeList);
-      MiddleCode jumpFalse = AddMiddleCode(longList, MiddleOperator.Jump);
-
-      ISet<MiddleCode> nextSet = new HashSet<MiddleCode>();
-      nextSet.UnionWith(trueStatement.NextSet);
-      nextSet.UnionWith(falseStatement.NextSet);
-      nextSet.Add(jumpTrue);
-      nextSet.Add(jumpFalse);
-
-      return (new Statement(longList, nextSet));
     }
 
     private static Stack<IDictionary<BigInteger, MiddleCode>> m_caseMapStack =
@@ -859,7 +809,7 @@ namespace CCompiler {
       }
     }
 
-     public static Expression Assignment(Expression leftExpression,
+   private static Expression Assignment(Expression leftExpression,
                                         Expression rightExpression,
                                         bool simpleAssignment) {
       rightExpression = TypeCast.ImplicitCast(rightExpression,
@@ -927,11 +877,6 @@ namespace CCompiler {
                                                  Expression trueExpression,
                                                  Expression falseExpression) {
       testExpression = TypeCast.ToLogical(testExpression);
-/*      if (ConstantExpression.IsConstant(testExpression)) {
-        return ConstantExpression.IsTrue(testExpression)
-               ? trueExpression : falseExpression;
-      }*/
-
       Type maxType = TypeCast.MaxType(trueExpression.Symbol.Type,
                                       falseExpression.Symbol.Type);
       trueExpression = TypeCast.ImplicitCast(trueExpression, maxType);
@@ -979,15 +924,6 @@ namespace CCompiler {
 
       return (new Expression(resultSymbol, shortList, longList));
     }
-
-    /*private static void ReplaceSymbol(List<MiddleCode> codeList,
-                                      Symbol fromSymbol, Symbol toSymbol) {
-      foreach (MiddleCode middleCode in codeList) {
-        if (middleCode[0] == fromSymbol) {
-          middleCode[0] = toSymbol;
-        }
-      }
-    }*/
 
     public static Expression ConstantIntegralExpression(Expression expression) 
     { expression = ConstantExpression.ConstantCast(expression,
@@ -1297,7 +1233,7 @@ namespace CCompiler {
     public static Expression AddressExpression(Expression expression) {
       Symbol symbol = expression.Symbol;
       Error.Check(!symbol.IsRegister() && !symbol.Type.IsBitfield(),
-                   expression,  Message.Not_addressable);
+                  expression,  Message.Not_addressable);
 
       Expression staticExpression =
         StaticExpression.Unary(MiddleOperator.Address, expression);
@@ -1329,7 +1265,7 @@ namespace CCompiler {
     //int *p = a + 2;
     public static Expression DereferenceExpression(Expression expression) {
       Error.Check(expression.Symbol.Type.IsPointerArrayOrString(),
-                   Message.Invalid_dereference_of_non__pointer);
+                  Message.Invalid_dereference_of_non__pointer);
 
       Expression staticExpression =
         StaticExpression.Unary(MiddleOperator.Dereference, expression);
