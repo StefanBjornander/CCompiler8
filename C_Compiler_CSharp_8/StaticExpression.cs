@@ -12,10 +12,10 @@ namespace CCompiler {
 
       switch (middleOp) {
         case MiddleOperator.Add:
-          if ((leftValue is StaticAddress) && (rightValue is BigInteger)) { // &i + 2
+          if ((leftValue is StaticAddress) && (rightValue is BigInteger)) { // &p + 2
             return GenerateAddition(leftSymbol, (BigInteger) rightValue);
           }
-          else if ((leftValue is BigInteger) && (rightValue is StaticAddress)) {// 2 + &i
+          else if ((leftValue is BigInteger) && (rightValue is StaticAddress)) {// 2 + &p
             return GenerateAddition(rightSymbol, (BigInteger) leftValue);
           }
           else if (leftSymbol.IsExternOrStaticArray() && (rightValue is BigInteger)) { // a + 2
@@ -81,24 +81,6 @@ namespace CCompiler {
       Symbol resultSymbol = new Symbol(symbol.Type, resultValue);
       return (new Expression(resultSymbol, null, null));
     }
-
-    /*private static Expression GenerateIndex(Symbol symbol,
-                                            BigInteger value) {
-      int offset = ((int) value) * symbol.Type.ArrayType.Size();
-      StaticValue resultValue;
-
-      if (symbol.Value is StaticAddress) {
-        StaticAddress staticAddress = (StaticAddress) symbol.Value;
-        resultValue = new StaticValue(staticAddress.UniqueName,
-                                      staticAddress.Offset + offset);
-      }
-      else {
-        resultValue = new StaticValue(symbol.UniqueName, offset);
-      }
-
-      Symbol resultSymbol = new Symbol(symbol.Type, resultValue);
-      return (new Expression(resultSymbol, null, null));
-    }*/
 
     public static Expression Unary(MiddleOperator middleOp, Expression expression) {
       Symbol symbol = expression.Symbol;

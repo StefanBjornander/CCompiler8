@@ -15,7 +15,7 @@ namespace CCompiler {
     public const string FileMarker = "@";
 
     private string m_name, m_uniqueName;
-    private bool m_externalLinkage;
+    private readonly bool m_externalLinkage;
     private Storage m_storage;
     private Type m_type;
     private object m_value;
@@ -208,31 +208,6 @@ namespace CCompiler {
 
       return "";
     }
-
-    /*public override string ToString() {
-      if (m_value is String) {
-        return "\"" + m_value.ToString().Replace("\n", "\\n") + "\"";
-      }
-      else if (m_value != null) {
-        return m_value.ToString();
-      }
-      else if (m_name != null) {
-        if (m_addressSymbol != null) {
-          return m_name + " -> " + m_addressSymbol.ToString();
-        }
-        else {
-          return m_name;
-        }
-      }
-      else {
-        if (m_addressSymbol != null) {
-          return m_addressSymbol.ToString();
-        }
-        else {
-          return "";
-        }
-      }
-    }*/
   }
 }
 

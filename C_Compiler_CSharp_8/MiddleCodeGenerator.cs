@@ -930,7 +930,7 @@ namespace CCompiler {
     }
 
     public static Expression ConstantIntegralExpression(Expression expression) 
-    { expression = ConstantExpression.ConstantCast(expression,
+    { expression = ConstantExpression.Cast(expression,
                                                   Type.SignedLongIntegerType);
       Error.Check(expression != null, expression,
                    Message.Non__constant_expression);
@@ -1350,7 +1350,7 @@ namespace CCompiler {
     }
 
     public static Expression CastExpression(Type type, Expression expression) {
-      Expression constantExpression = ConstantExpression.ConstantCast(expression, type);
+      Expression constantExpression = ConstantExpression.Cast(expression, type);
 
       if (constantExpression != null) {
         return constantExpression;
@@ -1486,8 +1486,8 @@ namespace CCompiler {
         expression = TypeCast.ImplicitCast(expression, typeList[index]);
       }
       else {
-        expression = TypeCast.TypePromotion(expression);
-        extraSize += ParameterTypeSize(expression.Symbol.Type);
+        expression = TypePromotion(expression);
+        extraSize += expression.Symbol.Type.SizeAddress();
       }
 
       if (index == 0) {
@@ -1506,23 +1506,30 @@ namespace CCompiler {
                     SymbolTable.CurrentTable.CurrentOffset + m_totalOffset,
                     argumentType, expression.Symbol);
 
-      int argumentSize = ParameterTypeSize(expression.Symbol.Type);
+      int argumentSize = expression.Symbol.Type.SizeAddress();
       m_parameterOffsetStack.Push(currentOffset + argumentSize);
       m_parameterExtraStack.Push(extraSize);
       m_totalOffset += argumentSize;
       return expression;
     }
 
-    // f(x, g(y))
-    private static int ParameterTypeSize(Type type) {
-      switch (type.Sort) {
-        case Sort.Array:
-        case Sort.Function:
-        case Sort.String:
-          return TypeSize.PointerSize;
 
-        default:
-          return type.Size();
+    public static Expression TypePromotion(Expression expression) {
+      Type type = expression.Symbol.Type;
+
+      if (type.IsChar() || type.IsShort()) {
+        if (type.IsSigned()) {
+          return TypeCast.ImplicitCast(expression, Type.SignedIntegerType);
+        }
+        else {
+          return TypeCast.ImplicitCast(expression, Type.UnsignedIntegerType);
+        }      
+      }
+      else if (type.IsFloat()) {
+        return TypeCast.ImplicitCast(expression, Type.DoubleType);
+      }
+      else {
+        return expression;
       }
     }
 

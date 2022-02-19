@@ -30,7 +30,7 @@ namespace CCompiler {
 
     private static Expression LogicalToIntegral(Expression expression) {
       if (expression.Symbol.Type.IsLogical()) {
-        return ConstantCast(expression, Type.SignedIntegerType);
+        return Cast(expression, Type.SignedIntegerType);
       }
 
       return expression;
@@ -38,7 +38,7 @@ namespace CCompiler {
 
     private static Expression LogicalToFloating(Expression expression) {
       if (expression.Symbol.Type.IsLogical()) {
-        return ConstantCast(expression, Type.DoubleType);
+        return Cast(expression, Type.DoubleType);
       }
 
       return expression;
@@ -46,7 +46,7 @@ namespace CCompiler {
 
     private static Expression ToLogical(Expression expression) {
       if (!expression.Symbol.Type.IsLogical()) {
-        return ConstantCast(expression, Type.LogicalType);
+        return Cast(expression, Type.LogicalType);
       }
 
       return expression;
@@ -283,8 +283,8 @@ namespace CCompiler {
 
       Type maxType = TypeCast.MaxType(leftExpression.Symbol.Type,
                                       rightExpression.Symbol.Type);
-      leftExpression = ConstantCast(leftExpression, maxType);
-      rightExpression = ConstantCast(rightExpression, maxType);
+      leftExpression = Cast(leftExpression, maxType);
+      rightExpression = Cast(rightExpression, maxType);
 
       decimal leftDecimal = (decimal) leftExpression.Symbol.Value,
               rightDecimal = (decimal) rightExpression.Symbol.Value,
@@ -384,8 +384,8 @@ namespace CCompiler {
       return (new Expression(resultSymbol, null, longList));
     }
 
-    public static Expression ConstantCast(Expression sourceExpression,
-                                          Type targetType) {
+    public static Expression Cast(Expression sourceExpression,
+                                  Type targetType) {
       if (!IsConstant(sourceExpression)) {
         return null;
       }

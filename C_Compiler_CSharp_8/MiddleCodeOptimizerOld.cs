@@ -489,13 +489,50 @@ namespace CCompiler {
                     (thisCode.Operator == MiddleOperator.Modulo)) &&
                     (rightSymbol != null) && (rightSymbol.Value is BigInteger) &&
                     (rightSymbol.Value.Equals(BigInteger.One))) {
-             newSymbol = leftSymbol;
+            newSymbol = leftSymbol;
           }
 
           if (newSymbol != null) {
-            thisCode.Operator = MiddleOperator.Assign; // i = 0 + j;
-            thisCode[1] = newSymbol;                   // i = j;
-            thisCode[2] = null;
+            /*if (resultSymbol.IsTemporary()) {              
+              thisCode.Operator = MiddleOperator.Empty;
+
+              if (newSymbol.IsTemporary()) {
+                int index2;
+                for (index2 = (index - 1); index2 >= 0; --index2) {
+                  MiddleCode previousCode = m_middleCodeList[index2];
+
+                  if (previousCode[0] == resultSymbol) {
+                    previousCode[0] = newSymbol;
+                    break;
+                  }
+                }
+              }
+
+              { int index2;
+                for (index2 = index + 1; index2 < m_middleCodeList.Count;
+                     ++index2) {
+                  MiddleCode nextCode = m_middleCodeList[index2];
+
+                  if (nextCode[0] == resultSymbol) {
+                    nextCode[0] = newSymbol;
+                  }
+
+                  if (nextCode[1] == resultSymbol) {
+                    nextCode[1] = newSymbol;
+                  }
+
+                  if (nextCode[2] == resultSymbol) {
+                    nextCode[2] = newSymbol;
+                  }
+                }
+              }
+            }
+            else*/ {
+              thisCode.Operator = MiddleOperator.Assign; // i = 0 + j;
+              thisCode[1] = newSymbol;                   // i = j;
+              thisCode[2] = null;
+            }
+
             m_update = true;
           }
         }

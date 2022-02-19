@@ -221,9 +221,9 @@ namespace CCompiler {
 
     private List<Symbol> m_parameterList;
     private List<Type> m_typeList;
-    private bool m_variadic;
+    private readonly bool m_variadic;
 
-    public Type(List< Symbol> parameterList, bool variadic) {
+    public Type(List<Symbol> parameterList, bool variadic) {
       m_sort = Sort.Function;
       m_parameterList = parameterList;
       m_variadic = variadic;
@@ -307,9 +307,8 @@ namespace CCompiler {
 
               return size;
             }        
-            else {
-              return 0;
-            }
+
+            return 0;
 
         case Sort.Union:
             if (m_memberMap == null) {
@@ -321,9 +320,8 @@ namespace CCompiler {
 
               return size;
             }
-            else {
-              return 0;
-            }
+
+            return 0;
 
         case Sort.Logical:
             return TypeSize.SignedIntegerSize;

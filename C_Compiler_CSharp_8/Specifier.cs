@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CCompiler {
   public class Specifier {
-    private bool m_externalLinkage;
+    private readonly bool m_externalLinkage;
     private Storage? m_storage;
     private Type m_type;
 
