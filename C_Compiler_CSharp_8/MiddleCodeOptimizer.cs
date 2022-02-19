@@ -61,14 +61,14 @@ namespace CCompiler {
       for (int index = 0; index < m_middleCodeList.Count; ++index) {
         MiddleCode middleCode = m_middleCodeList[index];
         addressMap.Add(middleCode, index);
-        middleCode.Index = index;
+        //middleCode.Index = index;
       }
     
       for (int index = 0; index < m_middleCodeList.Count; ++index) {
         MiddleCode sourceCode = m_middleCodeList[index];
       
-        if (sourceCode.IsGoto() || sourceCode.IsCarry() ||
-            sourceCode.IsRelation()) {
+          if (sourceCode.IsGoto() || sourceCode.IsCarry() ||
+              sourceCode.IsRelation()) {
           Error.ErrorXXX(sourceCode[0] is MiddleCode);
           MiddleCode targetCode = (MiddleCode) sourceCode[0];
           Error.ErrorXXX(addressMap.ContainsKey(targetCode));
@@ -152,6 +152,19 @@ namespace CCompiler {
     // 1. goto 21
     // 9. goto 21
 
+    private int TraceGoto(int target, ISet<int> sourceSet) {
+      MiddleCode objectCode = m_middleCodeList[target];
+    
+      if (!sourceSet.Contains(target) && objectCode.IsGoto()) {
+        sourceSet.Add(target);
+        int nextTarget = (int) objectCode[0];
+        return TraceGoto(nextTarget, sourceSet);
+      }
+      else {
+        return target;
+      }
+    }
+
     private void TraceGotoChains() {
       for (int index = 1; index < m_middleCodeList.Count; ++index) {
         MiddleCode middleCode = m_middleCodeList[index];
@@ -172,19 +185,6 @@ namespace CCompiler {
             m_update = true;
           }
         }
-      }
-    }
-
-    private int TraceGoto(int target, ISet<int> sourceSet) {
-      MiddleCode objectCode = m_middleCodeList[target];
-    
-      if (!sourceSet.Contains(target) && objectCode.IsGoto()) {
-        sourceSet.Add(target);
-        int nextTarget = (int) objectCode[0];
-        return TraceGoto(nextTarget, sourceSet);
-      }
-      else {
-        return target;
       }
     }
 
@@ -309,7 +309,7 @@ namespace CCompiler {
     // a = b
     // pop a
 
-    public void AssignFloat() {
+    /*public void AssignFloat() {
       for (int index = 0; index < (m_middleCodeList.Count - 1); ++index) {
         MiddleCode middleCode = m_middleCodeList[index];
 
@@ -317,12 +317,13 @@ namespace CCompiler {
           Symbol resultSymbol = (Symbol) middleCode[1];
         
           if (resultSymbol.Type.IsFloating()) {
+            Error.ErrorXXX(false);
             middleCode.Operator = MiddleOperator.PopFloat;
             m_update = true;
           }
         }
       }
-    }
+    }*/
 
     // t = b + c
     // a = t
@@ -464,8 +465,7 @@ namespace CCompiler {
                     (rightSymbol.Value.Equals(BigInteger.Zero))) {
             newSymbol = new Symbol(resultSymbol.Type, BigInteger.Zero);
           }
-
-          // t0 = -1 * i
+           // t0 = -1 * i
           else if ((thisCode.Operator == MiddleOperator.Multiply) &&
                     (leftSymbol.Value is BigInteger) &&
                     (leftSymbol.Value.Equals(BigInteger.MinusOne))) {
@@ -592,10 +592,10 @@ namespace CCompiler {
     private void OptimizeCommutative() {
       foreach (MiddleCode middleCode in m_middleCodeList) {
         if (middleCode.IsCommutative()) {
-          Symbol leftSymbol = (Symbol) middleCode[1],
-                 rightSymbol = (Symbol) middleCode[2];
+          Symbol leftSymbol = (Symbol) middleCode[1];
    
           if (leftSymbol.Value is BigInteger) {
+            Symbol rightSymbol = (Symbol) middleCode[2];
             middleCode[1] = rightSymbol;
             middleCode[2] = leftSymbol;
           }
