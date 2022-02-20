@@ -48,7 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Argument.cs" />
     <Compile Include="AssemblyCode.cs" />
     <Compile Include="AssemblyCodeGenerator.cs" />
     <Compile Include="AssemblyOperator.cs" />

@@ -6,7 +6,6 @@
 %{
   public static FileInfo Path = null;
   public static int Line = 1000;
-
 %}
 
 DECIMAL_VALUE [\+\-]?[1-9][0-9]*
@@ -28,6 +27,7 @@ CHAR_VALUE \'(\\\'|[^'])*\'
 STRING_VALUE \"(\\\"|[^"])*\"
 
 REGISTER_NAME "register_"[a-z]+
+REGISTER_NAME2 "register**"[a-z]+
 NAME [a-zA-Z_$][a-zA-Z0-9_]*
 
 PATH_LINE \$.*\$
@@ -133,6 +133,19 @@ WHITE_SPACE [ \t\r\n\f]
 {REGISTER_NAME} {
   { Register register;
     string text = yytext.Substring(9);
+
+    if (Enum.TryParse<Register>(text, out register)) {
+      yylval.register = register;
+      return ((int) Tokens.REGISTER_NAME);
+    }
+    
+    Error.Report(text, Message.Unknown_register);
+  }
+}
+
+{REGISTER_NAME2} {
+  { Register register;
+    string text = yytext.Substring(10);
 
     if (Enum.TryParse<Register>(text, out register)) {
       yylval.register = register;
