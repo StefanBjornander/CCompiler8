@@ -12,43 +12,34 @@ namespace CCompiler {
 
       switch (middleOp) {
         case MiddleOperator.Add:
-          if ((leftValue is StaticAddress) && (rightValue is BigInteger)) { // &p + 2
+          if ((leftValue is StaticAddress) && // &p + 2
+              (rightValue is BigInteger)) {
             return GenerateAddition(leftSymbol, (BigInteger) rightValue);
           }
-          else if ((leftValue is BigInteger) && (rightValue is StaticAddress)) {// 2 + &p
+          else if ((leftValue is BigInteger) && // 2 + &p
+                   (rightValue is StaticAddress)) {
             return GenerateAddition(rightSymbol, (BigInteger) leftValue);
           }
-          else if (leftSymbol.IsExternOrStaticArray() && (rightValue is BigInteger)) { // a + 2
-            return GenerateAddition(leftSymbol, (BigInteger)rightValue);
+          else if (leftSymbol.IsExternOrStaticArray() && // a + 2
+                   (rightValue is BigInteger)) {
+            return GenerateAddition(leftSymbol, (BigInteger) rightValue);
           }
-          else if ((leftValue is BigInteger) && rightSymbol.IsExternOrStaticArray()) { // 2 + a
+          else if ((leftValue is BigInteger) && // 2 + a
+                   rightSymbol.IsExternOrStaticArray()) {
             return GenerateAddition(rightSymbol, (BigInteger) leftValue);
           }
           break;
 
         case MiddleOperator.Subtract:
-          if ((leftValue is StaticAddress) && (rightValue is BigInteger)) { // &i - 2
+          if ((leftValue is StaticAddress) && // &p - 2
+              (rightValue is BigInteger)) {
             return GenerateAddition(leftSymbol, -((BigInteger) rightValue));
           }
-          if (leftSymbol.IsExternOrStaticArray() && (rightValue is BigInteger)) { // a - 2
+          else if (leftSymbol.IsExternOrStaticArray() && // a - 2
+                   (rightValue is BigInteger)) {
             return GenerateAddition(leftSymbol, -((BigInteger) rightValue));
           }
           break;
-
-        /*case MiddleOperator.Index:
-          if ((leftValue is StaticAddress)  && (rightValue is BigInteger)) { // a[2]
-            return GenerateIndex(leftSymbol, (BigInteger) rightValue);
-          }
-          else if ((leftValue is BigInteger) && (rightValue is StaticAddress)) {
-            return GenerateIndex(rightSymbol, (BigInteger) leftValue);
-          }
-          else if (leftSymbol.IsExternOrStaticArray() && (rightValue is BigInteger)) { // a[2]
-            return GenerateIndex(leftSymbol, (BigInteger) rightValue);
-          }
-          else if ((leftValue is BigInteger) && rightSymbol.IsExternOrStaticArray()) {
-            return GenerateIndex(rightSymbol, (BigInteger) leftValue);
-          }
-          break;*/
 
         case MiddleOperator.Dot:
           if (leftSymbol.IsExternOrStatic()) {
