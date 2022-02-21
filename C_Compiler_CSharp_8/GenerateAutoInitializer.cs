@@ -68,7 +68,7 @@ namespace CCompiler {
               }
               else {
                 Error.Check(fromList.Count <= toType.ArraySize,
-                             toType, Message.Too_many_initializers_in_array);
+                            toType, Message.Too_many_initializers_in_array);
               }
 
               for (int index = 0; index < fromList.Count; ++index) {
@@ -85,7 +85,7 @@ namespace CCompiler {
           case Sort.Struct: {
             List<Symbol> memberList = toType.MemberList; 
               Error.Check(fromList.Count <= memberList.Count, toType,
-                           Message.Too_many_initializers_in_struct);
+                          Message.Too_many_initializers_in_struct);
 
               for (int index = 0; index < fromList.Count; ++index) {
                 Symbol memberSymbol = memberList[index];

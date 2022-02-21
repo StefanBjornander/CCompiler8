@@ -413,6 +413,39 @@ namespace CCompiler {
       return codeList;
     }
 
+/*    private static object StringToCharacterArray(Type type, object initializer) {
+      if (initializer is Expression) {
+        Expression expression = (Expression) initializer;
+
+        if (type.IsArray() && type.ArrayType.IsChar() &&
+            expression.Symbol.Type.IsString()) {
+          string text = ((string) expression.Symbol.Value) + "\0";
+          List<object> list = new List<object>();
+
+          foreach (char c in text) {
+            Symbol charSymbol =
+              new Symbol(type.ArrayType, (BigInteger) ((int) c));
+            list.Add(new Expression(charSymbol));
+          }
+
+          return list;
+        }
+      }
+      else {
+        List<Expression> list = (List<Expression>) initializer;
+
+        for (int index = 0; index < list.Count; ++index) {
+          foreach (object subinitializer in list) {
+            //list[index] = StringToCharacterArray(list[index]);
+          }
+        }
+
+        return list;
+      }
+
+      return initializer;
+    }*/
+
     // ---------------------------------------------------------------------------------------------------------------------
 
     public static Declarator PointerDeclarator(List<Type> typeList,
