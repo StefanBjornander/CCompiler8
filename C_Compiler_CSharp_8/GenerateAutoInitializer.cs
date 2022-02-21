@@ -7,53 +7,37 @@ namespace CCompiler {
                                                 object fromInitializer, int extraOffset,
                                                 List<MiddleCode> codeList) {
       Type toType = toSymbol.Type;
+      fromInitializer = StringToCharacterArray(toType, fromInitializer);
 
       if (fromInitializer is Expression) {
         Expression fromExpression = (Expression) fromInitializer;
+        fromExpression = TypeCast.ImplicitCast(fromExpression, toType);
 
-        if (toType.IsArray() && toType.ArrayType.IsChar() &&
-            fromExpression.Symbol.Type.IsString()) {
-          string text = ((string) fromExpression.Symbol.Value) + "\0";
-          List<object> list = new List<object>();
-
-          foreach (char c in text) {
-            Symbol charSymbol =
-              new Symbol(toType.ArrayType, (BigInteger) ((int) c));
-            Expression charExpression = new Expression(charSymbol, null, null);
-            list.Add(charExpression);
+        foreach (MiddleCode middleCode in fromExpression.LongList) {
+          switch (middleCode.Operator) {
+            case MiddleOperator.PreCall:
+            case MiddleOperator.ParameterInitSize:
+            case MiddleOperator.Parameter:
+            case MiddleOperator.Call:
+            case MiddleOperator.PostCall:
+              middleCode[0] = ((int) middleCode[0]) + extraOffset;
+              break;
           }
+        }
 
-          return GenerateAuto(toSymbol, list, extraOffset, codeList);
+        codeList.AddRange(fromExpression.LongList);
+      
+        if (toSymbol.Type.IsFloating()) {
+          codeList.Add(new MiddleCode(MiddleOperator.PopFloat, toSymbol));
         }
         else {
-          fromExpression = TypeCast.ImplicitCast(fromExpression, toType);
-
-          foreach (MiddleCode middleCode in fromExpression.LongList) {
-            switch (middleCode.Operator) {
-              case MiddleOperator.PreCall:
-              case MiddleOperator.ParameterInitSize:
-              case MiddleOperator.Parameter:
-              case MiddleOperator.Call:
-              case MiddleOperator.PostCall:
-                middleCode[0] = ((int) middleCode[0]) + extraOffset;
-                break;
-            }
+          if (fromExpression.Symbol.Type.IsStructOrUnion()) {
+            codeList.Add(new MiddleCode(MiddleOperator.AssignInitSize,
+                                        toSymbol, fromExpression.Symbol));
           }
 
-          codeList.AddRange(fromExpression.LongList);
-      
-          if (toSymbol.Type.IsFloating()) {
-            codeList.Add(new MiddleCode(MiddleOperator.PopFloat, toSymbol));
-          }
-          else {
-            if (fromExpression.Symbol.Type.IsStructOrUnion()) {
-              codeList.Add(new MiddleCode(MiddleOperator.AssignInitSize,
-                                          toSymbol, fromExpression.Symbol));
-            }
-
-            codeList.Add(new MiddleCode(MiddleOperator.Assign, toSymbol,
-                                        fromExpression.Symbol));
-          }
+          codeList.Add(new MiddleCode(MiddleOperator.Assign, toSymbol,
+                                      fromExpression.Symbol));
         }
       }
       else {
@@ -118,6 +102,37 @@ namespace CCompiler {
       }
 
       return codeList;
+    }
+
+    public static object StringToCharacterArray(Type toType, object initializer) {
+      if (initializer is Expression) {
+        Expression fromExpression = (Expression)initializer;
+
+        if (toType.IsArray() && toType.ArrayType.IsChar() &&
+            fromExpression.Symbol.Type.IsString()) {
+          string text = ((string)fromExpression.Symbol.Value) + "\0";
+
+          if (toType.ArraySize == 0) {
+            toType.ArraySize = text.Length;
+          }
+          else {
+            Error.Check(text.Length < toType.ArraySize, toType,
+                         Message.Too_many_initializers_in_array);
+          }
+
+          List<object> list = new List<object>();
+
+          foreach (char c in text) {
+            Symbol charSymbol =
+              new Symbol(toType.ArrayType, (BigInteger)((int)c));
+            list.Add(new Expression(charSymbol));
+          }
+
+          return list;
+        }
+      }
+      
+      return initializer;
     }
   }
 }

@@ -4,6 +4,7 @@ namespace CCompiler {
   public class GenerateStaticInitializer {
     public static List<MiddleCode> GenerateStatic(Type toType,
                                                   object fromInitializer) {
+      fromInitializer = GenerateAutoInitializer.StringToCharacterArray(toType, fromInitializer);
       List<MiddleCode> codeList = new List<MiddleCode>();
 
       if (fromInitializer is Expression) {
@@ -13,22 +14,7 @@ namespace CCompiler {
                      Message.Non__static_initializer);
         Type fromType = fromSymbol.Type;
 
-        if (toType.IsArray() && toType.ArrayType.IsChar() &&
-            fromType.IsString()) {
-          string text = (string) fromSymbol.Value;
- 
-          if (toType.ArraySize == 0) {
-            toType.ArraySize = text.Length + 1;
-          }
-          else {
-            Error.Check(text.Length < toType.ArraySize, toType,
-                         Message.Too_many_initializers_in_array);
-          }
-
-          codeList.Add(new MiddleCode(MiddleOperator.Initializer,
-                                      fromSymbol.Type.Sort, text));
-        }
-        else if (toType.IsPointer() && fromType.IsArrayFunctionOrString()) {
+        if (toType.IsPointer() && fromType.IsArrayFunctionOrString()) {
           Error.Check((fromType.IsString() && toType.PointerType.IsChar()) ||
                        (fromType.IsArray() &&
                         fromType.ArrayType.Equals(toType.PointerType)) ||
