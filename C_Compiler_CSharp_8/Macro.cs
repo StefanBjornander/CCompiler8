@@ -30,8 +30,7 @@ namespace CCompiler {
     }
   
     public override bool Equals(object obj) {
-      if (obj is Macro) {
-        Macro macro = (Macro) obj;
+      if (obj is Macro macro) {
         return (m_parameters == macro.m_parameters) &&
                (m_tokenList.SequenceEqual(macro.m_tokenList));
       }

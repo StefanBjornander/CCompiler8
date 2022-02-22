@@ -70,12 +70,10 @@ namespace CCompiler {
       m_type = type;
       m_value = CheckValue(m_type, value);
 
-      if (m_value is string) {
-        string text = (string) m_value;
+      if (m_value is string text) {
         m_name = "string_" + Slash.CharToHex(text) + Symbol.NumberId;
       }
-      else if (m_value is StaticBase) {
-        StaticBase staticBase = (StaticBase) m_value;
+      else if (m_value is StaticBase staticBase) {
         m_name = m_value.GetType().Name + "_" + staticBase.UniqueName +
                  "_" + staticBase.Offset + Symbol.NumberId;
       }
@@ -92,9 +90,7 @@ namespace CCompiler {
     }
 
     private static object CheckValue(Type type, object value) {
-      if (value is BigInteger) {
-        BigInteger bigValue = (BigInteger) value;
-
+      if (value is BigInteger bigValue) {
         if (type.IsUnsigned() && (bigValue < 0)) {
           bigValue += TypeSize.GetMaxValue(type.Sort) + 1;
         }

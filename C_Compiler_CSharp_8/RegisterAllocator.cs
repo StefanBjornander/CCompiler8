@@ -50,9 +50,8 @@ namespace CCompiler {
     }
 
     private static void Check(AssemblyCode assemblyCode, int position) {
-      if (assemblyCode[position] is Track) {
-        Track track = (Track) assemblyCode[position];
-        Error.ErrorXXX(track.Register != null);
+      if (assemblyCode[position] is Track track) {
+        Debug.Assert(track.Register != null);
         assemblyCode[position] =
          AssemblyCode.RegisterToSize(track.Register.Value, track.CurrentSize);
       }

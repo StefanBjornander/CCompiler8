@@ -405,9 +405,7 @@ namespace CCompiler {
     }
 
     public override bool Equals(object obj) {
-      if (obj is Type) {
-        Type type = (Type) obj;
-
+      if (obj is Type type) {
         if ((m_constant == type.m_constant) &&
             (m_volatile == type.m_volatile) && (m_sort == type.m_sort)) {
           switch (m_sort) {

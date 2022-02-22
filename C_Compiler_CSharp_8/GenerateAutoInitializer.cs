@@ -111,31 +111,28 @@ namespace CCompiler {
 
     public static object StringToCharacterArray(Type toType,
                                                 object initializer) {
-    if (initializer is Expression) {
-        Expression fromExpression = (Expression)initializer;
+      if ((initializer is Expression fromExpression) &&
+          (toType.IsArray() && toType.ArrayType.IsChar() &&
+           fromExpression.Symbol.Type.IsString())) {
+        string text = ((string) fromExpression.Symbol.Value) + "\0";
 
-        if (toType.IsArray() && toType.ArrayType.IsChar() &&
-            fromExpression.Symbol.Type.IsString()) {
-          string text = ((string) fromExpression.Symbol.Value) + "\0";
-
-          if (toType.ArraySize == 0) {
-            toType.ArraySize = text.Length;
-          }
-          else {
-            Error.Check(text.Length < toType.ArraySize, toType,
-                         Message.Too_many_initializers_in_array);
-          }
-
-          List<object> list = new List<object>();
-
-          foreach (char c in text) {
-            Symbol charSymbol =
-              new Symbol(toType.ArrayType, (BigInteger)((int)c));
-            list.Add(new Expression(charSymbol));
-          }
-
-          return list;
+        if (toType.ArraySize == 0) {
+          toType.ArraySize = text.Length;
         }
+        else {
+          Error.Check(text.Length < toType.ArraySize, toType,
+                       Message.Too_many_initializers_in_array);
+        }
+
+        List<object> list = new List<object>();
+
+        foreach (char c in text) {
+          Symbol charSymbol =
+            new Symbol(toType.ArrayType, (BigInteger)((int)c));
+          list.Add(new Expression(charSymbol));
+        }
+
+        return list;
       }
       
       return initializer;

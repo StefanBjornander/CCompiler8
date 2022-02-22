@@ -60,8 +60,7 @@ namespace CCompiler {
       int offset = ((int) value) * symbol.Type.PointerOrArrayType.Size();
       StaticAddress resultValue;
 
-      if (symbol.Value is StaticAddress) {
-        StaticAddress staticAddress = (StaticAddress) symbol.Value;
+      if (symbol.Value is StaticAddress staticAddress) {
         resultValue = new StaticAddress(staticAddress.UniqueName,
                                         staticAddress.Offset + offset);
       }
@@ -73,36 +72,38 @@ namespace CCompiler {
       return (new Expression(resultSymbol, null, null));
     }
 
-    public static Expression Unary(MiddleOperator middleOp, Expression expression) {
+    public static Expression Unary(MiddleOperator middleOp,
+                                   Expression expression) {
       Symbol symbol = expression.Symbol;
-    
+
       switch (middleOp) {
-        case MiddleOperator.Address:
-          if (symbol.Value is StaticValue) { // &a[i], &s.i
-            StaticValue staticValue = (StaticValue) symbol.Value;
-            StaticAddress staticAddress =
-              new StaticAddress(staticValue.UniqueName, staticValue.Offset);
-            Symbol resultSymbol =
-              new Symbol(new Type(symbol.Type), staticAddress);
-            return (new Expression(resultSymbol, null, null));
-          }
-          else if (symbol.IsExternOrStatic()) { // &i
-            StaticAddress staticAddress =
-              new StaticAddress(symbol.UniqueName, 0);
-            Symbol resultSymbol =
-              new Symbol(new Type(symbol.Type), staticAddress);
-            return (new Expression(resultSymbol, null, null));
+        case MiddleOperator.Address: {
+            if (symbol.Value is StaticValue staticValue) { // &a[i], &s.i
+              StaticAddress staticAddress =
+                new StaticAddress(staticValue.UniqueName, staticValue.Offset);
+              Symbol resultSymbol =
+                new Symbol(new Type(symbol.Type), staticAddress);
+              return (new Expression(resultSymbol, null, null));
+            }
+            else if (symbol.IsExternOrStatic()) { // &i
+              StaticAddress staticAddress =
+                new StaticAddress(symbol.UniqueName, 0);
+              Symbol resultSymbol =
+                new Symbol(new Type(symbol.Type), staticAddress);
+              return (new Expression(resultSymbol, null, null));
+            }
           }
           break;
 
-        case MiddleOperator.Dereference:
-          if (symbol.Value is StaticAddress) {
-            StaticAddress staticAddress = (StaticAddress) symbol.Value;
-            StaticValue staticValue =
-              new StaticValue(staticAddress.UniqueName, staticAddress.Offset);
-            Symbol resultSymbol =
-              new Symbol(new Type(symbol.Type), staticValue);
-            return (new Expression(resultSymbol, null, null));
+        case MiddleOperator.Dereference: {
+            if (symbol.Value is StaticAddress staticAddress) {
+              StaticValue staticValue =
+                new StaticValue(staticAddress.UniqueName,
+                                staticAddress.Offset);
+              Symbol resultSymbol =
+                new Symbol(new Type(symbol.Type), staticValue);
+              return (new Expression(resultSymbol, null, null));
+            }
           }
           break;
       }

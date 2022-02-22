@@ -67,8 +67,7 @@ namespace CCompiler {
     }
   
     public override bool Equals(object obj) {
-      if (obj is Token) {
-        Token token = (Token) obj;
+      if (obj is Token token) {
         return (m_id == token.m_id) &&
                 m_value.Equals(token.m_value);
       }

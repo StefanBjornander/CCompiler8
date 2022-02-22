@@ -46,7 +46,6 @@ namespace CCompiler {
            (Operator == AssemblyOperator.sub)) &&
           ((m_operandArray[0] is Track) || (m_operandArray[0] is Register) ||
            (m_operandArray[0] is string))) {
-
         if ((m_operandArray[1] is int) && (m_operandArray[2] is BigInteger)) {
           CheckIncrement(2);
         }
@@ -849,10 +848,9 @@ namespace CCompiler {
           int size = TypeSize.Size(sort);
           byteList = new List<byte>(new byte[size]);
           
-          if (value is StaticAddress) {
-            StaticAddress staticAddress = (StaticAddress) value;
+          if (value is StaticAddress staticAddress) {
             LoadByteList(byteList, 0, size,
-                         (BigInteger)staticAddress.Offset);
+                         (BigInteger) staticAddress.Offset);
           }
           else {
             LoadByteList(byteList, 0, size, (BigInteger) value);         

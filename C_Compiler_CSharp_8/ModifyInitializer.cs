@@ -68,8 +68,7 @@ namespace CCompiler {
 
     private static int InitializerToDimensionMap(object initializer,
                           IDictionary<object,int> initializerToDimensionMap) {
-      if (initializer is List<object>) {
-        List<object> list = (List<object>) initializer;
+      if (initializer is List<object> list) {
         int maxDimension = 0;
 
         foreach (object member in list) {

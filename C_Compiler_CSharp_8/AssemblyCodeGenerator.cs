@@ -398,8 +398,7 @@ namespace CCompiler {
 
     private void CheckTrack(ISet<Track> trackSet, AssemblyCode assemblyCode,
                             int position, int index) {
-      if (assemblyCode[position] is Track) {
-        Track track = (Track) assemblyCode[position];
+      if (assemblyCode[position] is Track track) {
         trackSet.Add(track);
         track.Index = index;
       }
@@ -912,8 +911,7 @@ namespace CCompiler {
       Sort sort = (Sort) middleCode[0];
       object value = middleCode[1];
 
-      if (value is StaticAddress) {
-        StaticAddress staticAddress = (StaticAddress) value;
+      if (value is StaticAddress staticAddress) {
         string name = staticAddress.UniqueName;
         int offset = staticAddress.Offset;
         // dw name + offset
@@ -935,8 +933,7 @@ namespace CCompiler {
     private object Base(Symbol symbol) {
       Error.ErrorXXX(!(symbol.Value is BigInteger));
 
-      if (symbol.Value is StaticAddress) {
-        StaticAddress staticAddress = (StaticAddress) symbol.Value;
+      if (symbol.Value is StaticAddress staticAddress) {
         return staticAddress.UniqueName;
       }
       else if (symbol.AddressSymbol != null) {
@@ -959,8 +956,7 @@ namespace CCompiler {
     private int Offset(Symbol symbol) {
       Error.ErrorXXX(!(symbol.Value is BigInteger));
 
-      if (symbol.Value is StaticAddress) {
-        StaticAddress staticAddress = (StaticAddress) symbol.Value;
+      if (symbol.Value is StaticAddress staticAddress) {
         return staticAddress.Offset;
       }
       else if (symbol.AddressSymbol != null) {
@@ -1075,8 +1071,7 @@ namespace CCompiler {
                           Offset(resultSymbol), assignTrack);
           m_trackMap.Remove(assignSymbol);
         }
-        else if (assignSymbol.Value is BigInteger) {
-          BigInteger bigValue = (BigInteger) assignSymbol.Value;
+        else if (assignSymbol.Value is BigInteger bigValue) {
           if (Start.Linux &&
               !((-2147483648 <= bigValue) && (bigValue <= 2147483647))) {
             assignTrack = new Track(assignSymbol);
@@ -1376,10 +1371,9 @@ namespace CCompiler {
         rightTrack = LoadValueToRegister(rightSymbol);
       }
 
-      if ((rightTrack == null) && (rightSymbol.Value is BigInteger) &&
+      if ((rightTrack == null) && (rightSymbol.Value is BigInteger bigValue) &&
           ((middleOperator != MiddleOperator.Assign) ||
            (leftTrack == null))) {
-        BigInteger bigValue = (BigInteger) rightSymbol.Value;
         if (Start.Linux &&
             !((-2147483648 <= bigValue) && (bigValue <= 2147483647))) {
           rightTrack = LoadValueToRegister(rightSymbol);
@@ -2339,9 +2333,7 @@ namespace CCompiler {
         if (assemblyOperator == AssemblyOperator.define_value) {
           Sort sort = (Sort) operand0;
 
-          if ((sort != Sort.String) && (operand1 is string)) {
-            string name1 = (string) operand1;
-               
+          if ((sort != Sort.String) && (operand1 is string name1)) {
             if (!name1.Contains(Symbol.SeparatorId)) {
               externSet.Add(name1);
             }
@@ -2349,25 +2341,19 @@ namespace CCompiler {
         }
         else if ((assemblyOperator != AssemblyOperator.label) &&
                  (assemblyOperator != AssemblyOperator.comment)) {
-          if (operand0 is string) {
-            string name0 = (string) operand0;
-
+          if (operand0 is string name0) {
             if (!name0.Contains(Symbol.SeparatorId)) {
               externSet.Add(name0);
             }
           }
 
-          if (operand1 is string) {
-            string name1 = (string) operand1;
-               
+          if (operand1 is string name1) {
             if (!name1.Contains(Symbol.SeparatorId)) {
               externSet.Add(name1);
             }
           }
 
-          if (operand2 is string) {
-            string name2 = (string) operand2;
-            
+          if (operand2 is string name2) {
             if (!name2.Contains(Symbol.SeparatorId)) {
               externSet.Add(name2);
             }
@@ -2408,8 +2394,7 @@ namespace CCompiler {
                 accessMap.Add(byteList.Count - TypeSize.PointerSize,
                               (string) value);
               }
-              else if (value is StaticAddress) {
-                StaticAddress staticAddress = (StaticAddress) value;
+              else if (value is StaticAddress staticAddress) {
                 accessMap.Add(byteList.Count - TypeSize.PointerSize,
                               staticAddress.UniqueName);
               }

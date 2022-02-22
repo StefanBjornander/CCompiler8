@@ -36,11 +36,10 @@ namespace CCompiler {
     }
 
     public override bool Equals(object obj) {
-      if (obj is Pair<FirstType,SecondType>) {
-        Pair<FirstType, SecondType> pair = (Pair<FirstType, SecondType>) obj;
+      if (obj is Pair<FirstType,SecondType> pair) {
         return m_first.Equals(pair.m_first) && m_second.Equals(m_second);
       }
-    
+
       return false;
     }
   }

@@ -164,14 +164,16 @@ namespace CCompiler {
     }
 
     public override bool Equals(Object obj) {
-      if (obj is MiddleCode) {
-        MiddleCode middleCode = (MiddleCode)obj;
+      if (obj is MiddleCode middleCode) {
         return (m_middleOperator == middleCode.m_middleOperator) &&
-               (((m_operandArray[0] == null) && (middleCode.m_operandArray[0] == null)) ||
+               (((m_operandArray[0] == null) &&
+                 (middleCode.m_operandArray[0] == null)) ||
                  m_operandArray[0].Equals(middleCode.m_operandArray[0])) &&
-               (((m_operandArray[1] == null) && (middleCode.m_operandArray[1] == null)) ||
+               (((m_operandArray[1] == null) &&
+                (middleCode.m_operandArray[1] == null)) ||
                  m_operandArray[1].Equals(middleCode.m_operandArray[1])) &&
-               (((m_operandArray[2] == null) && (middleCode.m_operandArray[2] == null)) ||
+               (((m_operandArray[2] == null) &&
+                (middleCode.m_operandArray[2] == null)) ||
                  m_operandArray[2].Equals(middleCode.m_operandArray[2]));
       }
 
