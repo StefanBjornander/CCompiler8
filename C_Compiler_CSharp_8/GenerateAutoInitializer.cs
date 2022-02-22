@@ -1,6 +1,8 @@
 ﻿using System.Numerics;
 using System.Collections.Generic;
 
+// int months[] = {31, isLeapYear ? 29 : 28, 31, ..};
+
 namespace CCompiler {
   class GenerateAutoInitializer {
     public static List<MiddleCode> GenerateAuto(Symbol toSymbol,
@@ -9,8 +11,7 @@ namespace CCompiler {
       Type toType = toSymbol.Type;
       fromInitializer = StringToCharacterArray(toType, fromInitializer);
 
-      if (fromInitializer is Expression) {
-        Expression fromExpression = (Expression) fromInitializer;
+      if (fromInitializer is Expression fromExpression) {
         fromExpression = TypeCast.ImplicitCast(fromExpression, toType);
 
         foreach (MiddleCode middleCode in fromExpression.LongList) {
@@ -85,7 +86,7 @@ namespace CCompiler {
           case Sort.Union: {
               List<Symbol> memberList = toType.MemberList;
               Error.Check(fromList.Count == 1, toType,
-                           Message.Only_one_Initlizer_allowed_in_unions);
+                          Message.Only_one_Initlizer_allowed_in_unions);
               Symbol memberSymbol = memberList[0];
               Symbol subSymbol = new Symbol(memberSymbol.Type); 
               subSymbol.Name = toSymbol.Name + "." + memberSymbol.Name;
@@ -104,13 +105,18 @@ namespace CCompiler {
       return codeList;
     }
 
-    public static object StringToCharacterArray(Type toType, object initializer) {
-      if (initializer is Expression) {
+    // char s[] = "Hello";
+    // char s[] = {'H', 'e', 'l', 'l', 'o', '\n'};
+    // char *p = "Hello";
+
+    public static object StringToCharacterArray(Type toType,
+                                                object initializer) {
+    if (initializer is Expression) {
         Expression fromExpression = (Expression)initializer;
 
         if (toType.IsArray() && toType.ArrayType.IsChar() &&
             fromExpression.Symbol.Type.IsString()) {
-          string text = ((string)fromExpression.Symbol.Value) + "\0";
+          string text = ((string) fromExpression.Symbol.Value) + "\0";
 
           if (toType.ArraySize == 0) {
             toType.ArraySize = text.Length;

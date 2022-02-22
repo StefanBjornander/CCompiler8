@@ -1,15 +1,15 @@
 // -rebuild -print Main Malloc CType ErrNo Locale Math SetJmp Signal File Temp Scanf Printf StdLib Time String PrintTest CharacterTest FloatTest LimitsTest AssertTest StringTest LocaleTest SetJmpTest MathTest FileTest StdIOTest SignalTest StackTest MallocTest StdLibTest TimeTest
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Diagnostics;
 using System.Globalization;
 using System.Collections.Generic;
 
 namespace CCompiler {
   public class Start {
-    public static bool Linux = false, Windows;
+    public static bool Linux = true, Windows;
     public static string SourcePath = @"C:\Users\Stefa\Documents\vagrant\homestead\code\code\",
                          TargetPath = @"C:\D\";
 

@@ -4,11 +4,11 @@ namespace CCompiler {
   public class GenerateStaticInitializer {
     public static List<MiddleCode> GenerateStatic(Type toType,
                                                   object fromInitializer) {
-      fromInitializer = GenerateAutoInitializer.StringToCharacterArray(toType, fromInitializer);
       List<MiddleCode> codeList = new List<MiddleCode>();
+      fromInitializer =
+      GenerateAutoInitializer.StringToCharacterArray(toType, fromInitializer);
 
-      if (fromInitializer is Expression) {
-        Expression fromExpression = (Expression) fromInitializer;
+      if (fromInitializer is Expression fromExpression) {
         Symbol fromSymbol = fromExpression.Symbol;
         Error.Check(fromSymbol.IsExternOrStatic(), fromSymbol,
                      Message.Non__static_initializer);
