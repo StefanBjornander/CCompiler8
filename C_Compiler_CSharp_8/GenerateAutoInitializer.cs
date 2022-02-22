@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace CCompiler {
   class GenerateAutoInitializer {
     public static List<MiddleCode> GenerateAuto(Symbol toSymbol,
-                                                object fromInitializer, int extraOffset,
-                                                List<MiddleCode> codeList) {
+                                     object fromInitializer, int extraOffset,
+                                     List<MiddleCode> codeList) {
       Type toType = toSymbol.Type;
       fromInitializer = StringToCharacterArray(toType, fromInitializer);
 
