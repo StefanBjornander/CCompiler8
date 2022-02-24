@@ -924,8 +924,11 @@ namespace CCompiler {
 
     private void InitializerZero(MiddleCode middleCode) {
       int size = (int) middleCode[0];
-      Error.ErrorXXX(size > 0);
-      AddAssemblyCode(AssemblyOperator.define_zero_sequence, size);
+      Debug.Assert(size >= 0);
+
+      if (size > 0) {
+        AddAssemblyCode(AssemblyOperator.define_zero_sequence, size);
+      }
     }
 
     // Base and Offset

@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
 namespace CCompiler {
-  public class GenerateStaticInitializer {
-    public static List<MiddleCode> GenerateStatic(Type toType,
-                                                  object fromInitializer) {
-      List<MiddleCode> codeList = new List<MiddleCode>();
+/*  public class GenerateStaticInitializer {
+    public static void GenerateStaticx(Type toType, object fromInitializer,
+                                      List<MiddleCode> codeList) {
+//      List<MiddleCode> codeList = new List<MiddleCode>();
       fromInitializer =
-      GenerateAutoInitializer.StringToCharacterArray(toType, fromInitializer);
+      GenerateInitializer.StringToCharacterArray(toType, fromInitializer);
 
       if (fromInitializer is Expression fromExpression) {
         Symbol fromSymbol = fromExpression.Symbol;
@@ -48,19 +48,18 @@ namespace CCompiler {
               }
               else {
                 Error.Check(fromList.Count <= toType.ArraySize,
-                             toType, Message.Too_many_initializers_in_array);
+                            toType, Message.Too_many_initializers_in_array);
               }
 
               foreach (object value in fromList) {
-                codeList.AddRange(GenerateStatic(toType.ArrayType, value));
+                GenerateStaticx(toType.ArrayType, value, codeList);
+                //codeList.AddRange(GenerateStaticx(toType.ArrayType, value, codeList));
               }
 
               int restSize = toType.Size() -
                              (fromList.Count * toType.ArrayType.Size());
-              if (restSize > 0) {
-                codeList.Add(new MiddleCode(MiddleOperator.InitializerZero,
-                                            restSize));
-              }
+              codeList.Add(new MiddleCode(MiddleOperator.InitializerZero,
+                                          restSize));
             }
             break;
           
@@ -72,16 +71,15 @@ namespace CCompiler {
               int initSize = 0;
               for (int index = 0; index < fromList.Count; ++index) {
                 Symbol memberSymbol = memberList[index];
-                codeList.AddRange(GenerateStatic(memberSymbol.Type,
-                                                 fromList[index]));
+                //codeList.AddRange(GenerateStaticx(memberSymbol.Type,
+                //                                 fromList[index], codeList));
+                GenerateStaticx(memberSymbol.Type, fromList[index], codeList);
                 initSize += memberSymbol.Type.Size();
               }
 
               int restSize = toType.Size() - initSize;
-              if (restSize > 0) {
-                codeList.Add(new MiddleCode(MiddleOperator.InitializerZero,
-                                            restSize));
-              }
+              codeList.Add(new MiddleCode(MiddleOperator.InitializerZero,
+                                          restSize));
             }
             break;
           
@@ -91,14 +89,13 @@ namespace CCompiler {
                            Message.Only_one_Initlizer_allowed_in_unions);
 
               Symbol memberSymbol = memberList[0];
-              codeList.AddRange(GenerateStatic(memberSymbol.Type,
-                                               fromList[0]));
+              //codeList.AddRange(GenerateStaticx(memberSymbol.Type,
+              //                                 fromList[0], codeList));
+              GenerateStaticx(memberSymbol.Type, fromList[0], codeList);
 
               int restSize = toType.Size() - memberSymbol.Type.Size();
-              if (restSize > 0) {
-                codeList.Add(new MiddleCode(MiddleOperator.InitializerZero,
-                                            restSize));
-              }
+              codeList.Add(new MiddleCode(MiddleOperator.InitializerZero,
+                                          restSize));
             }
             break;
 
@@ -109,7 +106,7 @@ namespace CCompiler {
         }
       }
 
-      return codeList;
+  //    return codeList;
     }
-  }
+  }*/
 }

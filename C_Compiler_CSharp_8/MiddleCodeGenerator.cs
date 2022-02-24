@@ -372,22 +372,21 @@ namespace CCompiler {
 
       Symbol symbol = new Symbol(declarator.Name, specifier.ExternalLinkage,
                                  storage, type);
-      List<MiddleCode> codeList = new List<MiddleCode>();
-
       if (initializer != null) {
         SymbolTable.CurrentTable.AddSymbol(symbol, false);
 
         if (storage == Storage.Static) {
-          List<MiddleCode> middleCodeList =
-            GenerateStaticInitializer.GenerateStatic(type, initializer);
+          List<MiddleCode> codeList = new List<MiddleCode>();
+          Initializer.Generate(symbol, initializer, codeList);
           StaticSymbol staticSymbol =
-            ConstantExpression.Value(symbol.UniqueName, type, middleCodeList);
+            ConstantExpression.Value(symbol.UniqueName, type, codeList);
           SymbolTable.StaticSet.Add(staticSymbol);
         }
         else {
-          GenerateAutoInitializer.GenerateAuto(symbol, initializer,
-                                                0, codeList);
+          List<MiddleCode> codeList = new List<MiddleCode>();
+          Initializer.Generate(symbol, initializer, codeList);
           SymbolTable.CurrentTable.CurrentOffset += symbol.Type.Size();
+          return codeList;
         }
       }
       else if (bitsSymbol != null) {
@@ -410,7 +409,7 @@ namespace CCompiler {
         }
       }
 
-      return codeList;
+      return (new List<MiddleCode>());
     }
 
     // ---------------------------------------------------------------------------------------------------------------------
