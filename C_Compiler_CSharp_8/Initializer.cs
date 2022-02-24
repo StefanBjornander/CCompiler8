@@ -8,7 +8,34 @@ namespace CCompiler {
     public static void Generate(Symbol toSymbol, object fromInitializer,
                                 List<MiddleCode> codeList, int extraOffset = 0) {
       Type toType = toSymbol.Type;
-      fromInitializer = StringToCharacterArray(toType, fromInitializer);
+//      fromInitializer = StringToCharacterArray(toType, fromInitializer);
+
+      if (fromInitializer is Expression) {
+        Expression fromExpression = (Expression) fromInitializer;
+
+        if (toType.IsArray() && toType.ArrayType.IsChar() &&
+            fromExpression.Symbol.Type.IsString()) {
+          string text = ((string) fromExpression.Symbol.Value) + "\0";
+
+          if (toType.ArraySize == 0) {
+            toType.ArraySize = text.Length;
+          }
+          else {
+            Error.Check(text.Length < toType.ArraySize, toType,
+                         Message.Too_many_initializers_in_array);
+          }
+
+          List<object> list = new List<object>();
+
+          foreach (char c in text) {
+            Symbol charSymbol =
+              new Symbol(toType.ArrayType, (BigInteger)((int)c));
+            list.Add(new Expression(charSymbol));
+          }
+
+          fromInitializer = list;
+        }
+      }
 
       if (fromInitializer is List<object> fromList) {
         switch (toType.Sort) {
@@ -23,8 +50,7 @@ namespace CCompiler {
                             toType, Message.Too_many_initializers_in_array);
               }
 
-              for (int index = 0; index < fromList.Count; ++index)
-              {
+              for (int index = 0; index < fromList.Count; ++index) {
                 Symbol indexSymbol = new Symbol(toType.ArrayType);
                 indexSymbol.Storage = toSymbol.Storage;
                 indexSymbol.Offset = toSymbol.Offset +
@@ -84,7 +110,6 @@ namespace CCompiler {
                 codeList.Add(new MiddleCode(MiddleOperator.InitializerZero,
                                             restSize));
               }
-
             }
             break;
 
@@ -140,7 +165,7 @@ namespace CCompiler {
                          (fromType.IsFunction() &&
                           fromType.Equals(toType.PointerType)),
                          Message.Invalid_type_cast);
-                      StaticAddress staticAddress =
+            StaticAddress staticAddress =
               new StaticAddress(fromSymbol.UniqueName, 0);
             codeList.Add(new MiddleCode(MiddleOperator.Initializer,
                                         toType.Sort, staticAddress));
@@ -162,7 +187,7 @@ namespace CCompiler {
     // char s[] = {'H', 'e', 'l', 'l', 'o', '\n'};
     // char *p = "Hello";
 
-    public static object StringToCharacterArray(Type toType,
+    /*public static object StringToCharacterArray(Type toType,
                                                 object initializer) {
       if ((initializer is Expression fromExpression) &&
           (toType.IsArray() && toType.ArrayType.IsChar() &&
@@ -189,6 +214,6 @@ namespace CCompiler {
       }
       
       return initializer;
-    }
+    }*/
   }
 }
