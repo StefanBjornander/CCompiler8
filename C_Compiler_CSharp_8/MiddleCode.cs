@@ -25,7 +25,12 @@ namespace CCompiler {
         int size = (int)operand0;
       }
 
-      /*if ((SymbolTable.CurrentFunction != null) &&
+      /*if ((m_middleOperator == MiddleOperator.Assign) &&
+          (((Symbol) m_operandArray[0]).Type.IsFloating())) {
+        int i = 1;
+      }
+
+      if ((SymbolTable.CurrentFunction != null) &&
           SymbolTable.CurrentFunction.Name.Equals("math_test")) {
         string s = ToString();
         if ((s != null) && s.Contains("PushFloat floating8$0#")) {

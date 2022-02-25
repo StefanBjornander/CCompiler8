@@ -50,8 +50,8 @@ namespace CCompiler {
 
     public static void FunctionHeader(Specifier specifier,
                                       Declarator declarator) {
-      Type returnType;
       bool externalLinkage;
+      Type returnType;
 
       if (specifier != null) {
         externalLinkage = specifier.ExternalLinkage;
@@ -66,7 +66,7 @@ namespace CCompiler {
       Error.Check(declarator.Type.IsFunction(), declarator.Name,
                    Message.Not_a_function);
       Error.Check(declarator.Name != null,
-                   Message.Unnamed_function_definition);
+                  Message.Unnamed_function_definition);
 
       SymbolTable.CurrentFunction=new Symbol(declarator.Name, externalLinkage,
                                              Storage.Static, declarator.Type);
@@ -74,7 +74,7 @@ namespace CCompiler {
 
       if (SymbolTable.CurrentFunction.UniqueName.Equals("main")) {
         Error.Check(returnType.IsVoid() || returnType.IsInteger(), "main",
-                     Message.Function_main_must_return_void_or_integer);
+                    Message.Function_main_must_return_void_or_integer);
       }
 
       SymbolTable.CurrentTable =
@@ -82,10 +82,10 @@ namespace CCompiler {
     }
 
     public static void FunctionDefinition() {
-      Type funcType = SymbolTable.CurrentFunction.Type;
+      Type functionType = SymbolTable.CurrentFunction.Type;
 
-      if (funcType.IsOldStyle()) {
-        List<string> nameList = funcType.NameList;
+      if (functionType.IsOldStyle()) {
+        List<string> nameList = functionType.NameList;
         IDictionary<string,Symbol> entryMap =
           SymbolTable.CurrentTable.EntryMap;
 
@@ -110,7 +110,7 @@ namespace CCompiler {
         Error.Check(SymbolTable.CurrentTable.EntryMap.Count == 0,
           Message.New_and_old_style_mixed_function_definition);
 
-        foreach (Symbol symbol in funcType.ParameterList) {
+        foreach (Symbol symbol in functionType.ParameterList) {
           SymbolTable.CurrentTable.AddSymbol(symbol);
         }
       }
@@ -146,15 +146,6 @@ namespace CCompiler {
           AddMiddleCode(statement.CodeList, MiddleOperator.Exit);
         }
       }
-
-/*       if (SymbolTable.CurrentFunction.Type.ReturnType.IsVoid()) {
-        if (SymbolTable.CurrentFunction.UniqueName.Equals("main")) {
-          AddMiddleCode(statement.CodeList, MiddleOperator.Exit);
-        }
-        else {
-          AddMiddleCode(statement.CodeList, MiddleOperator.Return);
-        }
-      }*/
 
       AddMiddleCode(statement.CodeList, MiddleOperator.FunctionEnd,
                     SymbolTable.CurrentFunction);
@@ -669,7 +660,6 @@ namespace CCompiler {
       AddMiddleCode(codeList, MiddleOperator.Jump, testTarget);
       Backpatch(m_continueSetStack.Pop(), nextTarget);
       nextSet.UnionWith(m_breakSetStack.Pop());
-    
       return (new Statement(codeList, nextSet));
     }
 
@@ -724,7 +714,7 @@ namespace CCompiler {
 
         MiddleCode labelCode;
         Error.Check(m_labelMap.TryGetValue(labelName, out labelCode),
-                     labelName, Message.Missing_goto_address);
+                    labelName, Message.Missing_goto_address);
         Backpatch(gotoSet, labelCode);
       }
     }
@@ -757,12 +747,7 @@ namespace CCompiler {
     }
 
     public static Statement ExpressionStatement(Expression expression) {
-      if (expression != null) {
-        return (new Statement(expression.ShortList));
-      }
-      else {    
-        return (new Statement());
-      }
+      return (new Statement((expression != null) ? expression.ShortList : null));
     }
 
     public static Statement JumpRegisterStatement(Register register) {
@@ -1182,11 +1167,11 @@ namespace CCompiler {
       expression = TypeCast.LogicalToIntegral(expression);
       if (middleOp == MiddleOperator.BitwiseNot) {
         Error.Check(expression.Symbol.Type.IsIntegral(),
-                     expression, Message.Invalid_unary_expression);
+                    expression, Message.Invalid_unary_expression);
       }
       else {
         Error.Check(expression.Symbol.Type.IsArithmetic(),
-                     expression, Message.Invalid_unary_expression);
+                    expression, Message.Invalid_unary_expression);
       }
 
       Expression constantExpression =

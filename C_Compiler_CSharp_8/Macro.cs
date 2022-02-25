@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CCompiler {
   public class Macro {
-    private int m_parameters;
+    private readonly int m_parameters;
     private List<Token> m_tokenList;
     private IDictionary<int,int> m_indexToParamMap;
   

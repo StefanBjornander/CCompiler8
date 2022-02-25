@@ -44,7 +44,7 @@ namespace CCompiler {
         SematicOptimization();
         //OptimizeRelation(); // XXX
         OptimizeCommutative();
-        SwapRelation();
+        OptimizeRelation();
         RemoveTrivialAssign();
         RemoveTemporaryAssign();
         //OptimizeBinary();
@@ -325,10 +325,7 @@ namespace CCompiler {
       }
     }*/
 
-    // t = b + c
-    // a = t
-
-    // a = b + c
+    // t = b + c, a = t => a = b + c
 
     private void MergeBinary() {
       for (int index = 0; index < (m_middleCodeList.Count - 1); ++index) {
@@ -346,10 +343,7 @@ namespace CCompiler {
       }
     }
   
-    // t = a
-    // b = t
-
-    // b = a
+    // t = a, b = t => b = a
 
     private void MergeDoubleAssign() {
       for (int index = 0; index < (m_middleCodeList.Count - 1); ++index) {
@@ -514,7 +508,7 @@ namespace CCompiler {
 
     // if 1 < x goto
     // if x > 1 goto
-    private void SwapRelation() {
+    private void OptimizeRelation() {
       foreach (MiddleCode middleCode in m_middleCodeList) {
         if (middleCode.IsRelation()) {
           Symbol leftSymbol = (Symbol) middleCode[1],
@@ -549,8 +543,7 @@ namespace CCompiler {
       }
     }*/
 
-    // a = b + c
-    // a = c + b
+    // a = 1 + b => a = b + 1
   
     private void OptimizeCommutative() {
       foreach (MiddleCode middleCode in m_middleCodeList) {

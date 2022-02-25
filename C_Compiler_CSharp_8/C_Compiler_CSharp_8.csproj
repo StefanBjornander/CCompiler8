@@ -57,9 +57,9 @@
     <Compile Include="Expression.cs" />
     <Compile Include="ExpressionParser.cs" />
     <Compile Include="ExpressionScanner.cs" />
-    <Compile Include="Initializer.cs" />
-    <Compile Include="GenerateStaticInitializer.cs" />
     <Compile Include="Graph.cs" />
+    <Compile Include="Initializer.cs" />
+    <Compile Include="ZGenerateStaticInitializer.cs" />
     <Compile Include="IfElseChain.cs" />
     <Compile Include="Linker.cs" />
     <Compile Include="Macro.cs" />

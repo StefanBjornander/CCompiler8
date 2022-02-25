@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CCompiler {
   public class Type {
-    private Sort m_sort;
+    private readonly Sort m_sort;
 
     public Type(Sort sort) {
       m_sort = sort;
@@ -69,7 +69,7 @@ namespace CCompiler {
 
     // ------------------------------------------------------------------------
 
-    private ISet<Symbol> m_enumeratorItemSet = null;
+    private readonly ISet<Symbol> m_enumeratorItemSet = null;
 
     /*public static Type enumeratorType(ISet<Symbol> enumeratorItemSet) {
       Type type = new Type();
@@ -207,7 +207,7 @@ namespace CCompiler {
     // ------------------------------------------------------------------------
 
     private Type m_returnType;
-    private List<string> m_nameList;
+    private readonly List<string> m_nameList;
 
     public Type(List<string> nameList) {
       m_sort = Sort.Function;
@@ -219,8 +219,8 @@ namespace CCompiler {
       }
     }
 
-    private List<Symbol> m_parameterList;
-    private List<Type> m_typeList;
+    private readonly List<Symbol> m_parameterList;
+    private readonly List<Type> m_typeList;
     private readonly bool m_variadic;
 
     public Type(List<Symbol> parameterList, bool variadic) {

@@ -10,13 +10,14 @@ namespace CCompiler {
     public static int VariadicFrameOffset = 2 * TypeSize.PointerSize;
     public static int FunctionHeaderSize = 3 * TypeSize.PointerSize;
 
-    private SymbolTable m_parentTable;
+    private readonly SymbolTable m_parentTable;
     private int m_currentOffset;
 
-    private IDictionary<string,Symbol> m_entryMap =
-      new Dictionary<string,Symbol>();
-    private List<Symbol> m_entryList = new List<Symbol>();
-    private IDictionary<string, Type> m_tagMap = new Dictionary<string, Type>();
+    private readonly IDictionary<string, Symbol> m_entryMap =
+      new Dictionary<string, Symbol>();
+    private readonly List<Symbol> m_entryList = new List<Symbol>();
+    private readonly IDictionary<string, Type> m_tagMap =
+     new Dictionary<string, Type>();
 
     public static SymbolTable CurrentTable = null;
     public static Symbol CurrentFunction = null;

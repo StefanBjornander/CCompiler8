@@ -1,22 +1,22 @@
 using System.Collections.Generic;
 
 namespace CCompiler {
-  public class Graph<VertexType> {
+  public class GraphPair<VertexType> {
     private ISet<VertexType> m_vertexSet;
-    private ISet<(VertexType,VertexType)> m_edgeSet;
+    private ISet<Pair<VertexType,VertexType>> m_edgeSet;
 
-    public Graph() {
+    public GraphPair() {
       m_vertexSet = new HashSet<VertexType>();
-      m_edgeSet = new HashSet<(VertexType,VertexType)>();
+      m_edgeSet = new HashSet<Pair<VertexType,VertexType>>();
     }
   
-    public Graph(ISet<VertexType> vertexSet) {
+    public GraphPair(ISet<VertexType> vertexSet) {
       m_vertexSet = vertexSet;
-      m_edgeSet = new HashSet<(VertexType,VertexType)>();
+      m_edgeSet = new HashSet<Pair<VertexType,VertexType>>();
     }
 
-    public Graph(ISet<VertexType> vertexSet,
-                 ISet<(VertexType,VertexType)> edgeSet) {
+    public GraphPair(ISet<VertexType> vertexSet,
+                 ISet<Pair<VertexType,VertexType>> edgeSet) {
       m_vertexSet = vertexSet;
       m_edgeSet = edgeSet;
     }
@@ -25,20 +25,20 @@ namespace CCompiler {
       get { return m_vertexSet; }
     }
   
-    public ISet<(VertexType,VertexType)> EdgeSet {
+    public ISet<Pair<VertexType,VertexType>> EdgeSet {
       get { return m_edgeSet; }
     }
 //The neighbourSet method goes through all edges and add each found neighbor to the vertex.
     public ISet<VertexType> GetNeighbourSet(VertexType vertex) {
       ISet<VertexType> neighbourSet = new HashSet<VertexType>();
     
-      foreach ((VertexType,VertexType) edge in m_edgeSet) {
-        if (edge.Item1.Equals(vertex)) {
-          neighbourSet.Add(edge.Item2);
+      foreach (Pair<VertexType,VertexType> edge in m_edgeSet) {
+        if (edge.First.Equals(vertex)) {
+          neighbourSet.Add(edge.Second);
         }
       
-        if (edge.Item2.Equals(vertex)) {
-          neighbourSet.Add(edge.Item1);
+        if (edge.Second.Equals(vertex)) {
+          neighbourSet.Add(edge.First);
         }      
       }
     
@@ -50,11 +50,11 @@ namespace CCompiler {
     }
 
     public void EraseVertex(VertexType vertex) {
-      ISet<(VertexType,VertexType)> edgeSetCopy =
-        new HashSet<(VertexType,VertexType)>(m_edgeSet);
+      ISet<Pair<VertexType,VertexType>> edgeSetCopy =
+        new HashSet<Pair<VertexType,VertexType>>(m_edgeSet);
 
-      foreach ((VertexType,VertexType) edge in edgeSetCopy) {
-        if ((vertex.Equals(edge.Item1)) || (vertex.Equals(edge.Item2))) {
+      foreach (Pair<VertexType,VertexType> edge in edgeSetCopy) {
+        if ((vertex.Equals(edge.First)) || (vertex.Equals(edge.Second))) {
           m_edgeSet.Remove(edge);
         }
       }
@@ -63,17 +63,19 @@ namespace CCompiler {
     }
 
     public void AddEdge(VertexType vertex1, VertexType vertex2) {
-      (VertexType,VertexType) edge = (vertex1, vertex2);
+      Pair<VertexType,VertexType> edge =
+        new Pair<VertexType,VertexType>(vertex1, vertex2);
       m_edgeSet.Add(edge);
     }
 
     public void EraseEdge(VertexType vertex1, VertexType vertex2) {
-      (VertexType,VertexType) edge = (vertex1, vertex2);
+      Pair<VertexType,VertexType> edge =
+        new Pair<VertexType,VertexType>(vertex1, vertex2);
       m_edgeSet.Remove(edge);
     }
-//E.3.3. 	Graph Partition
+//E.3.3. 	GraphPair Partition
 //The method partitionate divides the graph into free subgraphs; that is, subgraphs which vertices have no neighbors in any of the other free subgraphs. First, we go through the vertices and perform a deep search to find all vertices reachable from the vertex. Then we generate a subgraph for each such vertex set.
-    public ISet<Graph<VertexType>> Split() {
+    public ISet<GraphPair<VertexType>> Split() {
       ISet<ISet<VertexType>> subgraphSet = new HashSet<ISet<VertexType>>();
 
       foreach (VertexType vertex in m_vertexSet) {
@@ -82,9 +84,9 @@ namespace CCompiler {
         subgraphSet.Add(vertexSet);
       }
 
-      ISet<Graph<VertexType>> graphSet = new HashSet<Graph<VertexType>>();
+      ISet<GraphPair<VertexType>> graphSet = new HashSet<GraphPair<VertexType>>();
       foreach (ISet<VertexType> vertexSet in subgraphSet) {
-        Graph<VertexType> subGraph = InducedSubGraph(vertexSet);
+        GraphPair<VertexType> subGraph = InducedSubGraph(vertexSet);
         graphSet.Add(subGraph);
       }
 
@@ -102,18 +104,18 @@ namespace CCompiler {
       }
     }
 //The InducedSubGraph method goes through the edge set and add all edges which both end vertices are members of the vertex set.
-    private Graph<VertexType> InducedSubGraph(ISet<VertexType> vertexSet) {
-      ISet<(VertexType,VertexType)> resultEdgeSet =
-        new HashSet<(VertexType,VertexType)>();
+    private GraphPair<VertexType> InducedSubGraph(ISet<VertexType> vertexSet) {
+      ISet<Pair<VertexType,VertexType>> resultEdgeSet =
+        new HashSet<Pair<VertexType,VertexType>>();
    
-      foreach ((VertexType,VertexType) edge in m_edgeSet) {
-        if (vertexSet.Contains(edge.Item1) &&
-            vertexSet.Contains(edge.Item2)) {
+      foreach (Pair<VertexType,VertexType> edge in m_edgeSet) {
+        if (vertexSet.Contains(edge.First) &&
+            vertexSet.Contains(edge.Second)) {
           resultEdgeSet.Add(edge);
         }
       }
    
-      return (new Graph<VertexType>(vertexSet, resultEdgeSet));
+      return (new GraphPair<VertexType>(vertexSet, resultEdgeSet));
     } 
   }
 }
