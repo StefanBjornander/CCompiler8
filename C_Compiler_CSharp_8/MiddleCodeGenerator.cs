@@ -321,7 +321,8 @@ namespace CCompiler {
                                    Symbol bitsSymbol) {
       if (bitsSymbol != null) {
         Error.Check((SymbolTable.CurrentTable.Scope == Scope.Struct) ||
-                    (SymbolTable.CurrentTable.Scope == Scope.Union), bitsSymbol,
+                    (SymbolTable.CurrentTable.Scope == Scope.Union),
+                    bitsSymbol,
                     Message.Bitfields_only_allowed_in_structs_or_unions);
       }
 
