@@ -1007,10 +1007,12 @@ namespace CCompiler {
       return (new Expression(symbol, shortList, longList));
     }
     
-    public static Expression ArithmeticExpression(MiddleOperator middleOp, Expression leftExpression,
-                                                  Expression rightExpression) {
+    public static Expression ArithmeticExpression(MiddleOperator middleOp,
+                                                  Expression leftExpression,
+                                                  Expression rightExpression){
       Expression constantExpression =
-        ConstantExpression.Arithmetic(middleOp, leftExpression, rightExpression);
+        ConstantExpression.Arithmetic(middleOp, leftExpression,
+                                      rightExpression);
       if (constantExpression != null) {
         return constantExpression;
       }
@@ -1095,8 +1097,9 @@ namespace CCompiler {
         if (typeSize > 1) {
           Symbol sizeSymbol = new Symbol(Type.SignedIntegerType,
                                          new BigInteger(typeSize));
-          return ArithmeticExpression(MiddleOperator.Divide, integerExpression,
-                                      new Expression(sizeSymbol));
+
+          return ArithmeticExpression(MiddleOperator.Divide,
+                           integerExpression, new Expression(sizeSymbol));
         }
 
         return integerExpression;
@@ -1111,20 +1114,24 @@ namespace CCompiler {
         Symbol resultSymbol;
 
         if (leftType.IsPointerArrayOrString()) {
-          int typeSize = leftExpression.Symbol.Type.PointerArrayOrStringType.Size();
+          int typeSize =
+            leftExpression.Symbol.Type.PointerArrayOrStringType.Size();
 
           if (typeSize > 1) {
             Symbol sizeSymbol =
-              new Symbol(rightExpression.Symbol.Type, new BigInteger(typeSize));
-            rightExpression = ArithmeticExpression(MiddleOperator.Multiply, rightExpression,
-                                                   new Expression(sizeSymbol));
+              new Symbol(rightExpression.Symbol.Type,
+                         new BigInteger(typeSize));
+            rightExpression =
+              ArithmeticExpression(MiddleOperator.Multiply, rightExpression,
+                                   new Expression(sizeSymbol));
           }
 
           rightExpression = TypeCast.ImplicitCast(rightExpression, leftType);
           resultSymbol = new Symbol(leftType);
         }
         else if (MiddleCode.IsShift(middleOp)) {
-          rightExpression = TypeCast.ImplicitCast(rightExpression, Type.UnsignedCharType);
+          rightExpression =
+            TypeCast.ImplicitCast(rightExpression, Type.UnsignedCharType);
           resultSymbol = new Symbol(leftType);
         }
         else {
@@ -1422,13 +1429,13 @@ namespace CCompiler {
       List<MiddleCode> longList = new List<MiddleCode>();
       longList.AddRange(functionExpression.LongList);
 
-      m_totalOffset -= m_parameterOffsetStack.Pop();
-      int extraSize = m_parameterExtraStack.Pop();
-      m_functionTypeStack.Pop();
-
       foreach (Expression argumentExpression in argumentList) {
         longList.AddRange(argumentExpression.LongList);
       }
+
+      m_totalOffset -= m_parameterOffsetStack.Pop();
+      int extraSize = m_parameterExtraStack.Pop();
+      m_functionTypeStack.Pop();
 
       Symbol functionSymbol = functionExpression.Symbol;
       AddMiddleCode(longList, MiddleOperator.Call,
@@ -1436,13 +1443,13 @@ namespace CCompiler {
                     functionSymbol, extraSize);
       AddMiddleCode(longList, MiddleOperator.PostCall,
                     SymbolTable.CurrentTable.CurrentOffset + m_totalOffset);
-    
-      Type returnType = functionType.ReturnType;
-      Symbol returnSymbol = new Symbol(returnType);
-    
+
       List<MiddleCode> shortList = new List<MiddleCode>();
       shortList.AddRange(longList);
-    
+
+      Type returnType = functionType.ReturnType;
+      Symbol returnSymbol = new Symbol(returnType);
+
       if (!returnType.IsVoid()) {
         if (returnType.IsStructOrUnion()) {
           Type pointerType = new Type(returnType);
@@ -1497,7 +1504,6 @@ namespace CCompiler {
       m_totalOffset += argumentSize;
       return expression;
     }
-
 
     public static Expression TypePromotion(Expression expression) {
       Type type = expression.Symbol.Type;
