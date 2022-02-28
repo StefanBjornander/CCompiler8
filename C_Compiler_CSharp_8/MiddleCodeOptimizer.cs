@@ -683,20 +683,33 @@ namespace CCompiler {
     }
 
     private void RemoveTemporaryAssignX() {
+      ISet<Symbol> simpleSet = new HashSet<Symbol>(),
+                   doubleSet = new HashSet<Symbol>();
+
+      foreach (MiddleCode middleCode in m_middleCodeList) {
+        if (middleCode.Operator == MiddleOperator.Assign) {
+          Symbol resultSymbol = (Symbol) middleCode[0];
+
+          if (simpleSet.Contains(resultSymbol)) {
+            doubleSet.Add(resultSymbol);
+          }
+          else {
+            simpleSet.Add(resultSymbol);
+          }
+        }
+      }
+
       int outerIndex = 0;
       foreach (MiddleCode outerCode in m_middleCodeList) {
         if (outerCode.Operator == MiddleOperator.Assign) {
           Symbol resultSymbol = (Symbol) outerCode[0],
                  assignSymbol = (Symbol) outerCode[1];
 
-          // £temp = index
-          if (resultSymbol.IsTemporary() && !resultSymbol.ConditionalResult) {
+          if (resultSymbol.IsTemporary() &&
+              !doubleSet.Contains(resultSymbol)) {
             for (int innerIndex = outerIndex + 1; innerIndex < m_middleCodeList.Count; ++innerIndex) {
               MiddleCode innerCode = m_middleCodeList[innerIndex];
-              if (innerCode[0] == resultSymbol) {
-                resultSymbol.ConditionalResult = true;
-                break;
-              }
+
               if (innerCode[1] == resultSymbol) {
                 innerCode[1] = assignSymbol;
               }

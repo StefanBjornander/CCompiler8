@@ -30,10 +30,11 @@ namespace CCompiler {
         int i = 1;
       }*/
 
-      string s = ToString();
-      if ((s != null) && s.Contains("temporary269")) {
+      /*string s = ToString();
+      if ((s != null) &&
+          s.Contains("IntegralToIntegral £temporary269 index")) {
         int i = 1;
-      }
+      }*/
 
       /*if ((SymbolTable.CurrentFunction != null) &&
           SymbolTable.CurrentFunction.Name.Equals("math_test")) {

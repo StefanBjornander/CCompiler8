@@ -150,7 +150,7 @@ namespace CCompiler {
       AddMiddleCode(statement.CodeList, MiddleOperator.FunctionEnd,
                     SymbolTable.CurrentFunction);
 
-      if (SymbolTable.CurrentFunction.Name.Equals("printArgument")) {
+      //if (SymbolTable.CurrentFunction.Name.Equals("printLongIntRec")) {
         string name = @"C:\Users\Stefa\Documents\vagrant\homestead\code\code\" +
                       SymbolTable.CurrentFunction.Name + ".middlebefore";
         StreamWriter streamWriter = new StreamWriter(name);
@@ -161,24 +161,26 @@ namespace CCompiler {
         }
 
         streamWriter.Close();
-      }
+      //}
 
       MiddleCodeOptimizer middleCodeOptimizer =
         new MiddleCodeOptimizer(statement.CodeList);
       middleCodeOptimizer.Optimize();
 
-      if (SymbolTable.CurrentFunction.Name.Equals("printArgument")) {
-        string name = @"C:\Users\Stefa\Documents\vagrant\homestead\code\code\" +
+      //Console.Out.WriteLine("\"" + SymbolTable.CurrentFunction.Name + "\",");
+
+      //if (SymbolTable.CurrentFunction.Name.Equals("printLongIntRec")) {
+        string nameX = @"C:\Users\Stefa\Documents\vagrant\homestead\code\code\" +
                       SymbolTable.CurrentFunction.Name + ".middleafter";
-        StreamWriter streamWriter = new StreamWriter(name);
+        StreamWriter streamWriterX = new StreamWriter(nameX);
 
         for (int index = 0; index < statement.CodeList.Count; ++index) {
           MiddleCode middleCode = statement.CodeList[index];
-          streamWriter.WriteLine(index + ": " + middleCode.ToString());
+          streamWriterX.WriteLine(index + ": " + middleCode.ToString());
         }
 
-        streamWriter.Close();
-      }
+        streamWriterX.Close();
+      //}
 
       List<AssemblyCode> assemblyCodeList = new List<AssemblyCode>();
       AssemblyCodeGenerator.GenerateAssembly(statement.CodeList,

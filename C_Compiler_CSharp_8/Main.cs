@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace CCompiler {
   public class Start {
-    public static bool Linux = false, Windows;
+    public static bool Linux = true, Windows;
     public static string SourcePath = @"C:\Users\Stefa\Documents\vagrant\homestead\code\code\",
                          TargetPath = @"C:\D\";
 
@@ -37,7 +37,7 @@ namespace CCompiler {
             if (rebuild || !IsGeneratedFileUpToDate(file, ".asm")) {
               if (print) {
                 Console.Out.WriteLine("Compiling \"" +
-                                      file.FullName + ".c\".");  
+                                      file.FullName + ".c\".");
               }
 
               CompileSourceFile(file);
