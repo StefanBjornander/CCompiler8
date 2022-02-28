@@ -28,9 +28,14 @@ namespace CCompiler {
       /*if ((m_middleOperator == MiddleOperator.Assign) &&
           (((Symbol) m_operandArray[0]).Type.IsFloating())) {
         int i = 1;
+      }*/
+
+      string s = ToString();
+      if ((s != null) && s.Contains("temporary269")) {
+        int i = 1;
       }
 
-      if ((SymbolTable.CurrentFunction != null) &&
+      /*if ((SymbolTable.CurrentFunction != null) &&
           SymbolTable.CurrentFunction.Name.Equals("math_test")) {
         string s = ToString();
         if ((s != null) && s.Contains("PushFloat floating8$0#")) {
@@ -157,9 +162,16 @@ namespace CCompiler {
             
       }
       else*/ {
-        return // ((m_index != -1) ? (m_index.ToString() + " ") : "") +
-               m_middleOperator + ToString(m_operandArray[0]) +
-               ToString(m_operandArray[1]) + ToString(m_operandArray[2]);
+        if (m_operandArray[0] is MiddleCode) {
+          return // ((m_index != -1) ? (m_index.ToString() + " ") : "") +
+                 m_middleOperator + " <" + ToString(m_operandArray[0]) + ">" +
+                 ToString(m_operandArray[1]) + ToString(m_operandArray[2]);
+        }
+        else {
+          return // ((m_index != -1) ? (m_index.ToString() + " ") : "") +
+                 m_middleOperator + ToString(m_operandArray[0]) +
+                 ToString(m_operandArray[1]) + ToString(m_operandArray[2]);
+        }
       }
     }
 

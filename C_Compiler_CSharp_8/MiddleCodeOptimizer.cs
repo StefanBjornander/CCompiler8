@@ -47,6 +47,7 @@ namespace CCompiler {
         OptimizeRelation();
         RemoveTrivialAssign();
         RemoveTemporaryAssign();
+        //RemoveTemporaryAssignX();
         //OptimizeBinary();
         CheckIntegral(); // XXX
         CheckFloating(); // XXX
@@ -670,6 +671,38 @@ namespace CCompiler {
               }
 
               ++innerIndex;              
+            }
+
+            outerCode.Clear();
+            m_update = true;
+          }
+        }
+
+        ++outerIndex;
+      }
+    }
+
+    private void RemoveTemporaryAssignX() {
+      int outerIndex = 0;
+      foreach (MiddleCode outerCode in m_middleCodeList) {
+        if (outerCode.Operator == MiddleOperator.Assign) {
+          Symbol resultSymbol = (Symbol) outerCode[0],
+                 assignSymbol = (Symbol) outerCode[1];
+
+          // £temp = index
+          if (resultSymbol.IsTemporary() && !resultSymbol.ConditionalResult) {
+            for (int innerIndex = outerIndex + 1; innerIndex < m_middleCodeList.Count; ++innerIndex) {
+              MiddleCode innerCode = m_middleCodeList[innerIndex];
+              if (innerCode[0] == resultSymbol) {
+                resultSymbol.ConditionalResult = true;
+                break;
+              }
+              if (innerCode[1] == resultSymbol) {
+                innerCode[1] = assignSymbol;
+              }
+              if (innerCode[2] == resultSymbol) {
+                innerCode[2] = assignSymbol;
+              }
             }
 
             outerCode.Clear();

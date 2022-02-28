@@ -52,8 +52,11 @@ namespace CCompiler {
       m_name = Symbol.TemporaryId + "temporary" + (TemporaryNameCount++);
       m_storage = Storage.Auto;
       m_type = type;
-    }
 
+      if (m_name.Contains("temporary1974")) {
+        int i = 1;
+      }
+    }
     public Symbol(ISet<MiddleCode> trueSet, ISet<MiddleCode> falseSet) {
       m_name = Symbol.TemporaryId + "logical" + (TemporaryNameCount++);
       m_storage = Storage.Auto;
@@ -187,6 +190,18 @@ namespace CCompiler {
     public bool IsTemporary() {
       return (m_name != null) && m_name.Contains(TemporaryId) &&
              (m_addressSymbol == null);             
+    }
+
+    bool m_conditionalResult = false;
+    public bool ConditionalResult {
+      get { return m_conditionalResult; }
+      set {
+        if (m_name.Contains("temporary1975")) {
+          int i = 1;
+        }
+
+        m_conditionalResult = value;
+      }
     }
 
     public bool IsAssignable() {
