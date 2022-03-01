@@ -27,7 +27,7 @@ namespace CCompiler {
     PreCall, Call, PostCall, DecreaseStack,
 
     ParameterInitSize, Parameter,
-    GetReturnValue, SetReturnValue, Return, Exit,
+    GetReturnValue, /*SetReturnValue,*/ Return, Exit,
 
     IntegralToIntegral, IntegralToFloating, FloatingToIntegral,
 

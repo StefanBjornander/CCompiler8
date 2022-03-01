@@ -150,7 +150,7 @@ namespace CCompiler {
       AddMiddleCode(statement.CodeList, MiddleOperator.FunctionEnd,
                     SymbolTable.CurrentFunction);
 
-      //if (SymbolTable.CurrentFunction.Name.Equals("printLongIntRec")) {
+      /*if (SymbolTable.CurrentFunction.Name.Equals("printLongIntRec")) {
         string name = @"C:\Users\Stefa\Documents\vagrant\homestead\code\code\" +
                       SymbolTable.CurrentFunction.Name + ".middlebefore";
         StreamWriter streamWriter = new StreamWriter(name);
@@ -161,7 +161,7 @@ namespace CCompiler {
         }
 
         streamWriter.Close();
-      //}
+      }*/
 
       MiddleCodeOptimizer middleCodeOptimizer =
         new MiddleCodeOptimizer(statement.CodeList);
@@ -169,7 +169,7 @@ namespace CCompiler {
 
       //Console.Out.WriteLine("\"" + SymbolTable.CurrentFunction.Name + "\",");
 
-      //if (SymbolTable.CurrentFunction.Name.Equals("printLongIntRec")) {
+      /*if (SymbolTable.CurrentFunction.Name.Equals("printLongIntRec")) {
         string nameX = @"C:\Users\Stefa\Documents\vagrant\homestead\code\code\" +
                       SymbolTable.CurrentFunction.Name + ".middleafter";
         StreamWriter streamWriterX = new StreamWriter(nameX);
@@ -180,7 +180,7 @@ namespace CCompiler {
         }
 
         streamWriterX.Close();
-      //}
+      }*/
 
       List<AssemblyCode> assemblyCodeList = new List<AssemblyCode>();
       AssemblyCodeGenerator.GenerateAssembly(statement.CodeList,
@@ -731,7 +731,7 @@ namespace CCompiler {
         expression = TypeCast.ImplicitCast(expression,
                               SymbolTable.CurrentFunction.Type.ReturnType);
         codeList = expression.LongList;
-        AddMiddleCode(codeList, MiddleOperator.SetReturnValue);
+        //AddMiddleCode(codeList, MiddleOperator.SetReturnValue);
         AddMiddleCode(codeList, MiddleOperator.Return,
                       null, expression.Symbol);
       }
@@ -1095,15 +1095,11 @@ namespace CCompiler {
           TypeCast.ExplicitCast(subtractExpression, Type.SignedIntegerType);
 
         int typeSize = leftType.PointerArrayOrStringType.Size();
-        if (typeSize > 1) {
-          Symbol sizeSymbol = new Symbol(Type.SignedIntegerType,
-                                         new BigInteger(typeSize));
+        Symbol sizeSymbol = new Symbol(Type.SignedIntegerType,
+                                       new BigInteger(typeSize));
 
-          return ArithmeticExpression(MiddleOperator.Divide,
-                           integerExpression, new Expression(sizeSymbol));
-        }
-
-        return integerExpression;
+        return ArithmeticExpression(MiddleOperator.Divide,
+                         integerExpression, new Expression(sizeSymbol));
       }
       else {
         if (rightType.IsPointerArrayOrString()) {
@@ -1118,14 +1114,11 @@ namespace CCompiler {
           int typeSize =
             leftExpression.Symbol.Type.PointerArrayOrStringType.Size();
 
-          if (typeSize > 1) {
-            Symbol sizeSymbol =
-              new Symbol(rightExpression.Symbol.Type,
-                         new BigInteger(typeSize));
-            rightExpression =
-              ArithmeticExpression(MiddleOperator.Multiply, rightExpression,
-                                   new Expression(sizeSymbol));
-          }
+          Symbol sizeSymbol =
+            new Symbol(rightExpression.Symbol.Type, new BigInteger(typeSize));
+          rightExpression =
+            ArithmeticExpression(MiddleOperator.Multiply, rightExpression,
+                                 new Expression(sizeSymbol));
 
           rightExpression = TypeCast.ImplicitCast(rightExpression, leftType);
           resultSymbol = new Symbol(leftType);

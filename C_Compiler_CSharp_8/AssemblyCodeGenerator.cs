@@ -87,12 +87,12 @@ namespace CCompiler {
         AddAssemblyCode(AssemblyOperator.comment, middleCode.ToString());
 
         /*if ((SymbolTable.CurrentFunction != null) &&
-            SymbolTable.CurrentFunction.Name.Equals("printArgument") &&
-            (middleIndex == 23)) {
+            SymbolTable.CurrentFunction.Name.Equals("@abs") &&
+            (middleIndex == 2)) {
           int i = 1;
-        }
+        }*/
 
-        if ((SymbolTable.CurrentFunction != null) &&
+        /*if ((SymbolTable.CurrentFunction != null) &&
             SymbolTable.CurrentFunction.Name.Equals("math_test") &&
             (middleIndex == 31)) {
           int i = 1;
@@ -356,7 +356,7 @@ namespace CCompiler {
 
           case MiddleOperator.Dot:
           case MiddleOperator.Index:
-          case MiddleOperator.SetReturnValue:
+          //case MiddleOperator.SetReturnValue:
           case MiddleOperator.FunctionEnd:
           case MiddleOperator.Empty:
             break;

@@ -111,7 +111,6 @@
     <None Include="ExpressionScanner.gplex" />
     <None Include="MainParser.gppg" />
     <None Include="MainScanner.gplex" />
-    <None Include="Nasm.bat" />
     <None Include="Parser.bat" />
     <None Include="PreParser.gppg" />
     <None Include="PreScanner.gplex" />
