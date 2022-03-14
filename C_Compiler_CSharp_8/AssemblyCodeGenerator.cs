@@ -354,10 +354,10 @@ namespace CCompiler {
             StackTop(middleCode);
             break;
 
-          case MiddleOperator.Dot:
-          case MiddleOperator.Index:
-          //case MiddleOperator.SetReturnValue:
           case MiddleOperator.FunctionEnd:
+          case MiddleOperator.Dot:
+          //case MiddleOperator.Index:
+          //case MiddleOperator.SetReturnValue:
           case MiddleOperator.Empty:
             break;
 

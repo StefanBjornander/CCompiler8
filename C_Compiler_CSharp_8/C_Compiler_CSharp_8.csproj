@@ -59,6 +59,7 @@
     <Compile Include="ExpressionScanner.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Initializer.cs" />
+    <Compile Include="MiddleCodeOptimizer.cs" />
     <Compile Include="ZGenerateStaticInitializer.cs" />
     <Compile Include="IfElseChain.cs" />
     <Compile Include="Linker.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="Message.cs" />
     <Compile Include="MiddleCode.cs" />
     <Compile Include="MiddleCodeGenerator.cs" />
-    <Compile Include="MiddleCodeOptimizer.cs" />
     <Compile Include="MiddleOperator.cs" />
     <Compile Include="ModifyInitializer.cs" />
     <Compile Include="ObjectCodeComparer.cs" />

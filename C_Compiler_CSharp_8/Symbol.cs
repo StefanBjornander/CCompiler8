@@ -192,11 +192,8 @@ namespace CCompiler {
              (m_addressSymbol == null);             
     }
 
-    bool m_conditionalResult = false;
-    public bool ConditionalResult {
-      get { return m_conditionalResult; }
-      set { m_conditionalResult = value; }
-    }
+    //public bool SimpleAssign { get; set; }
+    //public bool DoubleAssign { get; set; }
 
     public bool IsAssignable() {
       return !IsValue() && !m_type.IsConstantRecursive() &&

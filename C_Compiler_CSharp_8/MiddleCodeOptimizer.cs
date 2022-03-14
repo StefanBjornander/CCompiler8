@@ -45,9 +45,9 @@ namespace CCompiler {
         //OptimizeRelation(); // XXX
         OptimizeCommutative();
         OptimizeRelation();
-        RemoveTrivialAssign();
+        //RemoveTrivialAssign();
         RemoveTemporaryAssign();
-        RemoveTemporaryAssignX();
+        RemoveTemporaryAccess();
         //OptimizeBinary();
         CheckIntegral(); // XXX
         CheckFloating(); // XXX
@@ -310,7 +310,7 @@ namespace CCompiler {
     // a = b
     // pop a
 
-    /*public void AssignFloat() {
+    public void AssignFloat() {
       for (int index = 0; index < (m_middleCodeList.Count - 1); ++index) {
         MiddleCode middleCode = m_middleCodeList[index];
 
@@ -324,7 +324,7 @@ namespace CCompiler {
           }
         }
       }
-    }*/
+    }
 
     // t = b + c, a = t => a = b + c
 
@@ -354,7 +354,8 @@ namespace CCompiler {
         if ((thisCode.Operator == MiddleOperator.Assign) &&
             (nextCode.Operator == MiddleOperator.Assign) &&
             thisCode[0] == nextCode[1]) {
-          thisCode[0] = nextCode[0];
+          Error.ErrorXXX(false);
+          //thisCode[0] = nextCode[0];
           nextCode.Clear();
           m_update = true;
         }
@@ -682,13 +683,14 @@ namespace CCompiler {
       }
     }
 
-    private void RemoveTemporaryAssignX() {
-      ISet<Symbol> simpleSet = new HashSet<Symbol>();
+    private void RemoveTemporaryAccess() {
+      ISet<Symbol> simpleSet = new HashSet<Symbol>(),
+                   doubleSet = new HashSet<Symbol>();
 
       foreach (MiddleCode middleCode in m_middleCodeList) {
         if (middleCode[0] is Symbol resultSymbol) {
           if (simpleSet.Contains(resultSymbol)) {
-            resultSymbol.ConditionalResult = true;
+            doubleSet.Add(resultSymbol);
           }
           else {
             simpleSet.Add(resultSymbol);
@@ -703,7 +705,7 @@ namespace CCompiler {
                  assignSymbol = (Symbol) outerCode[1];
 
           if (resultSymbol.IsTemporary() &&
-              !resultSymbol.ConditionalResult) {
+              !doubleSet.Contains(resultSymbol)) {
             int minAssignIndex = -1, maxAccessIndex = -1;
 
             for (int innerIndex = outerIndex + 1;

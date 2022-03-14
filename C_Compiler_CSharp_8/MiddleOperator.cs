@@ -17,12 +17,11 @@ namespace CCompiler {
 
     Carry, NotCarry, Case, CaseEnd, Jump,
 
-    Index, Dot, // Increment, Decrement,
     Plus, Minus, Add, Subtract,
 
     Multiply, Divide, Modulo,
 
-    Address, Dereference,
+    Dot, Address, Dereference,
 
     PreCall, Call, PostCall, DecreaseStack,
 

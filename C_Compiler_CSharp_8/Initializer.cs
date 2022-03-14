@@ -1,17 +1,17 @@
-﻿using System.Numerics;
-using System.Collections.Generic;
+﻿// int months[] = {31, isLeapYear ? 29 : 28, 31, ..};
 
-// int months[] = {31, isLeapYear ? 29 : 28, 31, ..};
+// char s[] = "Hello";
+// char s[] = {'H', 'e', 'l', 'l', 'o', '\n'};
+// char *p = "Hello";
+
+using System.Numerics;
+using System.Collections.Generic;
 
 namespace CCompiler {
   class Initializer {
     public static void Generate(Symbol toSymbol, object fromInitializer,
                                 List<MiddleCode> codeList, int extraOffset = 0) {
       Type toType = toSymbol.Type;
-
-      // char s[] = "Hello";
-      // char s[] = {'H', 'e', 'l', 'l', 'o', '\n'};
-      // char *p = "Hello";
 
       if (fromInitializer is Expression) {
         Expression fromExpression = (Expression) fromInitializer;
