@@ -42,9 +42,8 @@ namespace CCompiler {
         DereferenceToIndex();
         //MergeDoubleAssign(); // XXX
         SematicOptimization();
-        //OptimizeRelation(); // XXX
+        OptimizeRelation(); // XXX
         OptimizeCommutative();
-        OptimizeRelation();
         //RemoveTrivialAssign();
         RemoveTemporaryAssign();
         RemoveTemporaryAccess();
@@ -354,8 +353,8 @@ namespace CCompiler {
         if ((thisCode.Operator == MiddleOperator.Assign) &&
             (nextCode.Operator == MiddleOperator.Assign) &&
             thisCode[0] == nextCode[1]) {
-          Error.ErrorXXX(false);
-          //thisCode[0] = nextCode[0];
+          //Error.ErrorXXX(false);
+          thisCode[0] = nextCode[0];
           nextCode.Clear();
           m_update = true;
         }
