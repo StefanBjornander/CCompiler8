@@ -7,14 +7,6 @@ namespace CCompiler {
   public class MiddleCode {
     private MiddleOperator m_middleOperator;
     private object[] m_operandArray = new object[3];
-    //public bool Visited { get; set; }
-
-    //private int m_index = -1;
-
-    /*public int Index {
-      get { return m_index; }
-      set { m_index = value; }
-    }*/
 
     public MiddleCode(MiddleOperator middleOp, object operand0 = null,
                       object operand1 = null, object operand2 = null) {
