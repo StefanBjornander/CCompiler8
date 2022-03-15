@@ -150,7 +150,12 @@ namespace CCompiler {
       AddMiddleCode(statement.CodeList, MiddleOperator.FunctionEnd,
                     SymbolTable.CurrentFunction);
 
-      /*if (SymbolTable.CurrentFunction.Name.Equals("printLongIntRec")) {
+      if (SymbolTable.CurrentFunction.Name.Equals("exp") ||
+          SymbolTable.CurrentFunction.Name.Equals("log") ||
+          SymbolTable.CurrentFunction.Name.Equals("sqrt") ||
+          SymbolTable.CurrentFunction.Name.Equals("modf") ||
+          SymbolTable.CurrentFunction.Name.Equals("tan") ||
+          SymbolTable.CurrentFunction.Name.Equals("printLongDoubleFraction")) {
         string name = @"C:\Users\Stefa\Documents\vagrant\homestead\code\code\" +
                       SymbolTable.CurrentFunction.Name + ".middlebefore";
         StreamWriter streamWriter = new StreamWriter(name);
@@ -161,15 +166,18 @@ namespace CCompiler {
         }
 
         streamWriter.Close();
-      }*/
+      }
 
       MiddleCodeOptimizer middleCodeOptimizer =
         new MiddleCodeOptimizer(statement.CodeList);
       middleCodeOptimizer.Optimize();
 
-      //Console.Out.WriteLine("\"" + SymbolTable.CurrentFunction.Name + "\",");
-
-      /*if (SymbolTable.CurrentFunction.Name.Equals("printLongIntRec")) {
+      if (SymbolTable.CurrentFunction.Name.Equals("exp") ||
+          SymbolTable.CurrentFunction.Name.Equals("log") ||
+          SymbolTable.CurrentFunction.Name.Equals("sqrt") ||
+          SymbolTable.CurrentFunction.Name.Equals("modf") ||
+          SymbolTable.CurrentFunction.Name.Equals("tan") ||
+          SymbolTable.CurrentFunction.Name.Equals("printLongDoubleFraction")) {
         string nameX = @"C:\Users\Stefa\Documents\vagrant\homestead\code\code\" +
                       SymbolTable.CurrentFunction.Name + ".middleafter";
         StreamWriter streamWriterX = new StreamWriter(nameX);
@@ -180,7 +188,7 @@ namespace CCompiler {
         }
 
         streamWriterX.Close();
-      }*/
+      }
 
       List<AssemblyCode> assemblyCodeList = new List<AssemblyCode>();
       AssemblyCodeGenerator.GenerateAssembly(statement.CodeList,

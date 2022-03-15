@@ -3,13 +3,12 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Diagnostics;
 using System.Globalization;
 using System.Collections.Generic;
 
 namespace CCompiler {
   public class Start {
-    public static bool Linux = true, Windows;
+    public static bool Linux = false, Windows;
     public static string SourcePath = @"C:\Users\Stefa\Documents\vagrant\homestead\code\code\",
                          TargetPath = @"C:\D\";
 
